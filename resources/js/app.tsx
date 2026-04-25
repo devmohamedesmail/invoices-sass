@@ -5,9 +5,22 @@ import { initializeTheme } from '@/hooks/use-appearance';
 import AppLayout from '@/layouts/app-layout';
 import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
-import i18n from './i18n';
+import i18n from './i18n/index';
+import ClientLayout from '@/layouts/vendor/vendor-layout';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const lang = i18n.language || 'en'
+
+document.documentElement.lang = lang
+document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
+
+// listen to language change
+i18n.on('languageChanged', (lng) => {
+    document.documentElement.lang = lng
+    document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr'
+})
+
+
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -19,8 +32,8 @@ createInertiaApp({
                 return AuthLayout;
             case name.startsWith('settings/'):
                 return [AppLayout, SettingsLayout];
-            case name.startsWith('users/'): // 👈 أضف ده
-                return null;
+            case name.startsWith('client/'):
+                return ClientLayout;
             default:
                 return AppLayout;
         }

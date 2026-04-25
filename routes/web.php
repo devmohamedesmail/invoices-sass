@@ -17,8 +17,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 
-Route::get('/users', function(){
-    return Inertia::render("users/index");
+Route::get('/client', function(){
+    return Inertia::render("client/index");
 } );
 
 require __DIR__.'/settings.php';

@@ -1,7 +1,13 @@
 import React from 'react'
 
-export default function Index() {
+export default function ClientDashboard() {
   return (
-    <div>index</div>
+    <div>
+      
+      
+      
+      index users
+      
+      </div>
   )
 }
