@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Inertia\Inertia;
 
-Route::inertia('/', 'welcome', [
+
+
+Route::inertia('/', 'home', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
 
@@ -17,8 +19,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 
-Route::get('/client', function(){
-    return Inertia::render("client/index");
-} );
+
 
 require __DIR__.'/settings.php';
+require __DIR__.'/admin.php';
+require __DIR__.'/companies.php';
+require __DIR__.'/vendor.php';

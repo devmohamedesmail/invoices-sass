@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { Head } from '@inertiajs/react';
 import VendorSidebar from '@/components/vendor-sidebar';
 import VendorHeader from '@/components/vendor-header';
-import { useTranslation } from 'react-i18next';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+
 
 interface VendorLayoutProps {
     children: React.ReactNode;

@@ -21,17 +21,19 @@ import {
     Moon
 } from 'lucide-react';
 
+
 export default function VendorSidebar({ sidebarOpen, setSidebarOpen }: { sidebarOpen: boolean, setSidebarOpen: (open: boolean) => void }) {
     const { t, i18n } = useTranslation()
     const isRtl = i18n.language === 'ar';
+    
 
 
     const navigation = [
-        { name: 'Dashboard', href: '#', icon: LayoutDashboard, active: true },
-        { name: 'Invoices', href: '#', icon: FileText, active: false },
-        { name: 'Payments', href: '#', icon: CreditCard, active: false },
-        { name: 'Team', href: '#', icon: Users, active: false },
-        { name: 'Settings', href: '#', icon: Settings, active: false },
+        { name: t('vendor.sidebar.dashboard'), href: '#', icon: LayoutDashboard, active: true },
+        { name: t('vendor.sidebar.invoices'), href: '#', icon: FileText, active: false },
+        { name: t('vendor.sidebar.payments'), href: '#', icon: CreditCard, active: false },
+        { name: t('vendor.sidebar.team'), href: '#', icon: Users, active: false },
+        { name: t('vendor.sidebar.settings'), href: '/companies/edit/page', icon: Settings, active: false },
     ];
     return (
         <>
