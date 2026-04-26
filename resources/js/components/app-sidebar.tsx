@@ -15,14 +15,9 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
+import { useTranslation } from 'react-i18next';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
+
 
 const footerNavItems: NavItem[] = [
     {
@@ -38,6 +33,21 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+
+const{t}=useTranslation();
+    const mainNavItems: NavItem[] = [
+        {
+            title: t('dashboard.dashboard'),
+            href: dashboard(),
+            icon: LayoutGrid,
+        },
+        {
+            title: t('dashboard.countries'),
+            href: '/admin/countries',
+            icon: LayoutGrid,
+        },
+    ];
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>

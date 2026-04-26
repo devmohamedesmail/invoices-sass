@@ -21,17 +21,19 @@ import {
     Moon
 } from 'lucide-react';
 
+
 export default function VendorSidebar({ sidebarOpen, setSidebarOpen }: { sidebarOpen: boolean, setSidebarOpen: (open: boolean) => void }) {
     const { t, i18n } = useTranslation()
     const isRtl = i18n.language === 'ar';
+    
 
 
     const navigation = [
-        { name: 'Dashboard', href: '#', icon: LayoutDashboard, active: true },
-        { name: 'Invoices', href: '#', icon: FileText, active: false },
-        { name: 'Payments', href: '#', icon: CreditCard, active: false },
-        { name: 'Team', href: '#', icon: Users, active: false },
-        { name: 'Settings', href: '#', icon: Settings, active: false },
+        { name: t('vendor.sidebar.dashboard'), href: '#', icon: LayoutDashboard, active: true },
+        { name: t('vendor.sidebar.invoices'), href: '#', icon: FileText, active: false },
+        { name: t('vendor.sidebar.payments'), href: '#', icon: CreditCard, active: false },
+        { name: t('vendor.sidebar.team'), href: '#', icon: Users, active: false },
+        { name: t('vendor.sidebar.settings'), href: '/companies/edit/page', icon: Settings, active: false },
     ];
     return (
         <>
@@ -98,7 +100,7 @@ export default function VendorSidebar({ sidebarOpen, setSidebarOpen }: { sidebar
                 </div>
 
                 {/* Sidebar Footer */}
-                <div className="p-4 border-t border-neutral-200 dark:border-neutral-800">
+                {/* <div className="p-4 border-t border-neutral-200 dark:border-neutral-800">
                     <div className="bg-gradient-to-br from-indigo-50 to-violet-50 dark:from-indigo-950/40 dark:to-violet-950/40 rounded-2xl p-4 border border-indigo-100 dark:border-indigo-900/50 relative overflow-hidden">
                         <div className="absolute top-0 end-0 -mt-4 -me-4 w-24 h-24 bg-gradient-to-br from-indigo-500/20 to-violet-500/20 blur-2xl rounded-full" />
                         <h4 className="font-semibold text-sm text-neutral-900 dark:text-neutral-100 mb-1 relative z-10">Need help?</h4>
@@ -107,7 +109,7 @@ export default function VendorSidebar({ sidebarOpen, setSidebarOpen }: { sidebar
                             <HelpCircle className="w-3.5 h-3.5 me-1.5" /> Documentation
                         </Button>
                     </div>
-                </div>
+                </div> */}
             </aside>
         </>
 
