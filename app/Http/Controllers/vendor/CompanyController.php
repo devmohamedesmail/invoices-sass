@@ -8,6 +8,7 @@ use App\Traits\UploadsToCloudinary;
 use Illuminate\Foundation\Exceptions\Renderer\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class CompanyController extends Controller
@@ -29,27 +30,42 @@ class CompanyController extends Controller
     {
         try {
             $user = Auth::user();
-            $request->validate([
-                "name"       => "required",
-                "email"      => "required",
-                "phone"      => "required",
-                "address"    => "required",
-                "city"       => "required",
-                "state"      => "required",
-                "zip"        => "required",
-                "country_id" => "required",
-                "logo"       => "required",
-            ]);
-            $company             = new Company();
-            $company->user_id    = $user->id;
-            $company->name       = $request->name;
-            $company->email      = $request->email;
-            $company->phone      = $request->phone;
-            $company->address    = $request->address;
-            $company->city       = $request->city;
-            $company->state      = $request->state;
-            $company->zip        = $request->zip;
-            $company->country_id = $request->country_id;
+            // $request->validate([
+            //     "name"       => "required",
+            //     "email"      => "required",
+            //     "phone"      => "required",
+            //     "address"    => "required",
+            //     "city"       => "required",
+            //     "state"      => "required",
+            //     "zip"        => "required",
+            //     "country_id" => "required",
+            //     "logo"       => "required",
+            //     "vat_number" => "required",
+            //     "registration_number" => "required",
+            // ]);
+            $company                      = new Company();
+            $company->user_id             = $user->id;
+            $company->name                = $request->name;
+            $company->email               = $request->email;
+            $company->phone               = $request->phone;
+            $company->address             = $request->address;
+            $company->city                = $request->city;
+            $company->state               = $request->state;
+            $company->zip                 = $request->zip;
+            $company->country_id          = $request->country_id;
+            $company->vat_number          = $request->vat_number;
+            $company->registration_number = $request->registration_number;
+
+            $baseSlug = Str::slug($request->name);
+            $slug     = $baseSlug;
+            $count    = 1;
+
+            while (Company::where('slug', $slug)->exists()) {
+                $slug = $baseSlug . '-' . $count;
+                $count++;
+            }
+
+            $company->slug = $slug;
 
             $logoPath = null;
             if ($request->hasFile('logo')) {
@@ -64,40 +80,36 @@ class CompanyController extends Controller
         }
     }
 
-
-
-
     public function editPage()
     {
-       
-       try{
-         $countries = Country::all();
-         $company = Company::where('user_id', Auth::user()->id)->first();
-        return Inertia::render("vendor/company/update", [
-            "countries" => $countries,
-            "company"   => $company,
-        ]);
-       }catch(Exception $e){
-        return redirect()->back()->with("error", $e->getMessage());
-       }
-    }
 
+        try {
+            $countries = Country::all();
+            $company   = Company::where('user_id', Auth::user()->id)->first();
+            return Inertia::render("vendor/company/update", [
+                "countries" => $countries,
+                "company"   => $company,
+            ]);
+        } catch (Exception $e) {
+            return redirect()->back()->with("error", $e->getMessage());
+        }
+    }
 
     public function updateCompany(Request $request, $id)
     {
         try {
 
-            $request->validate([
-                "name"       => "required",
-                "email"      => "required",
-                "phone"      => "required",
-                "address"    => "required",
-                "city"       => "required",
-                "state"      => "required",
-                "zip"        => "required",
-                "country_id" => "required",
-               "logo" => "nullable|image",
-            ]);
+            // $request->validate([
+            //     "name"       => "required",
+            //     "email"      => "required",
+            //     "phone"      => "required",
+            //     "address"    => "required",
+            //     "city"       => "required",
+            //     "state"      => "required",
+            //     "zip"        => "required",
+            //     "country_id" => "required",
+            //    "logo" => "nullable|image",
+            // ]);
             $company             = Company::find($id);
             $company->name       = $request->name;
             $company->email      = $request->email;
@@ -108,15 +120,15 @@ class CompanyController extends Controller
             $company->zip        = $request->zip;
             $company->country_id = $request->country_id;
 
-           
+            $company->vat_number          = $request->vat_number;
+            $company->registration_number = $request->registration_number;
 
             if ($request->hasFile('logo')) {
-            $company->logo = $this->uploadToCloudinary(
-                $request->file('logo'),
-                'stores/logos'
-            );
-        }
-
+                $company->logo = $this->uploadToCloudinary(
+                    $request->file('logo'),
+                    'stores/logos'
+                );
+            }
 
             // $company->logo = $logoPath;
             $company->save();
@@ -125,9 +137,5 @@ class CompanyController extends Controller
             return redirect()->back()->with("error", $e->getMessage());
         }
     }
-
-
-
-    
 
 }

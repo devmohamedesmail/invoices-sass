@@ -1,33 +1,52 @@
 {
-    "common": {
-        "save": "حفظ",
-        "edit": "تعديل",
-        "delete": "حذف",
-         "update":"تحديث",
-         "updated_successfully":"تم التحديث بنجاح",
-         "something_went_wrong":"حدث خطأ"
-    },
-    "dashboard": {
-        "dashboard": "لوحة التحكم",
-        "countries": "الدول"
-    },
-    "countries": {
-        "add_country": "إضافة دولة",
-        "edit_country": "تعديل دولة",
-        "name_ar": "الاسم بالعربية",
-        "name_en": "الاسم بالإنجليزية",
-        "code": "الكود",
-        "currency": "العملة",
-        "currency_symbol": "رمز العملة",
-        "flag": "العلم",
-        "vat": "الضريبة",
-        "active": "نشط",
-        "save": "حفظ",
-        "edit": "تعديل",
-        "delete": "حذف"
-       
-    },
-    "vendor": {
+  "common": {
+    "save": "حفظ",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "update": "تحديث",
+    "updated_successfully": "تم التحديث بنجاح",
+    "something_went_wrong": "حدث خطأ",
+    "upload-image": "رفع صورة",
+    "file-size-limit": "حجم الملف يجب أن يكون أقل من 2 ميجابايت",
+    "file-type-limit": "نوع الملف يجب أن يكون صورة",
+    "choose-file": "اختر ملف",
+    "remove": "حذف",
+    "change": "تغيير"
+  },
+  "auth": {
+    "register": "تسجيل",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirm_password": "تأكيد كلمة المرور",
+    "create_account": "إنشاء حساب",
+    "already_have_account": "هل لديك حساب بالفعل؟",
+    "login": "تسجيل الدخول",
+    "forgot_password": "نسيت كلمة المرور؟",
+    "remember_me": "تذكرني",
+    "dont_have_account": "ليس لديك حساب؟",
+    "sign_up": "تسجيل"
+  },
+  "dashboard": {
+    "dashboard": "لوحة التحكم",
+    "countries": "الدول"
+  },
+  "countries": {
+    "add_country": "إضافة دولة",
+    "edit_country": "تعديل دولة",
+    "name_ar": "الاسم بالعربية",
+    "name_en": "الاسم بالإنجليزية",
+    "code": "الكود",
+    "currency": "العملة",
+    "currency_symbol": "رمز العملة",
+    "flag": "العلم",
+    "vat": "الضريبة",
+    "active": "نشط",
+    "save": "حفظ",
+    "edit": "تعديل",
+    "delete": "حذف"
+  },
+  "vendor": {
     "sidebar": {
       "dashboard": "لوحة التحكم",
       "invoices": "الفواتير",
@@ -36,7 +55,7 @@
       "settings": "الإعدادات"
     }
   },
-    "company": {
+  "company": {
     "profile": "ملف الشركة",
     "update_profile": "تحديث ملف الشركة",
     "profile_description": "إنشاء وإدارة بيانات شركتك",
@@ -52,6 +71,18 @@
     "zip": "الرمز البريدي",
     "country": "الدولة",
     "select_country": "اختر الدولة",
-    "address": "العنوان"
+    "address": "العنوان",
+    "vat_number": "رقم الضريبة",
+    "registration_number": "رقم السجل التجاري",
+    "name_required": "اسم الشركة مطلوب",
+    "email_required": "البريد الإلكتروني مطلوب",
+    "email_invalid": "البريد الإلكتروني غير صحيح",
+    "phone_required": "رقم الهاتف مطلوب",
+    "address_required": "العنوان مطلوب",
+    "city_required": "المدينة مطلوبة",
+    "country_required": "الدولة مطلوبة",
+    "file_invalid": "ملف غير صالح",
+    "file_size_invalid": "حجم الملف يجب أن يكون أقل من 2 ميجابايت",
+    "file_type_invalid": "نوع الملف يجب أن يكون صورة"
   }
 }

@@ -7,6 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { BuildingIcon, MailIcon, MapPinIcon, PhoneIcon, ImagePlusIcon } from 'lucide-react';
 import Header from '@/components/header';
 import useCreateCompany from '@/hooks/company/useCreateCompany';
+import InputError from '@/components/input-error';
+import { Controller } from "react-hook-form";
+import ImagePicker from '@/components/ui/image-picker';
 
 interface Country {
     id: number;
@@ -18,25 +21,27 @@ interface Country {
 
 interface Props {
     countries: Country[];
-   
+
 }
 
 export default function CreateCompany({ countries }: Props) {
- 
-const {
-    t,
-    data,
-    setData,
-    processing,
-    errors,
-    submit,
-    handleCountryChange,
-} = useCreateCompany(countries);
+
+    const {
+        t,
+        register,
+        handleSubmit,
+        onSubmit,
+        errors,
+        isSubmitting,
+        handleCountryChange,
+        setValue,
+        control,
+    } = useCreateCompany(countries);
 
     return (
-       <>
-       <Header />
-        <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <>
+            <Header />
+            <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
                 <Card className="border-primary/20 shadow-lg bg-card overflow-hidden">
                     <CardHeader className="bg-primary/5 border-b border-primary/10 pb-6 px-6 sm:px-10 pt-8">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -46,17 +51,17 @@ const {
                             <div>
                                 <CardTitle className="text-2xl sm:text-3xl text-primary font-bold">
                                     {t("company.profile")}
-                                    </CardTitle>
+                                </CardTitle>
                                 <CardDescription className="text-muted-foreground mt-1 text-base">
                                     {t("company.profile_description")}
                                 </CardDescription>
                             </div>
                         </div>
                     </CardHeader>
-                    
+
                     <CardContent className="pt-8 px-6 sm:px-10 pb-10">
-                        <form onSubmit={submit} className="space-y-10">
-                            
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+
                             {/* General Information Section */}
                             <div className="space-y-6">
                                 <div className="border-b border-border pb-3">
@@ -65,12 +70,12 @@ const {
                                         {t("company.general_information")}
                                     </h3>
                                 </div>
-                                
+
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                                     <div className="space-y-2.5">
                                         <Label htmlFor="name" className="text-foreground">
                                             {t("company.name")}
-                                            </Label>
+                                        </Label>
                                         <div className="relative">
                                             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                                 <BuildingIcon className="h-4 w-4 text-muted-foreground/70" />
@@ -80,18 +85,16 @@ const {
                                                 type="text"
                                                 className="pl-10 h-11"
                                                 placeholder="Acme Corp"
-                                                value={data.name}
-                                                onChange={(e) => setData('name', e.target.value)}
-                                                required
+                                                {...register("name")}
                                             />
                                         </div>
-                                        {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
+                                        <InputError message={errors.name?.message} />
                                     </div>
 
                                     <div className="space-y-2.5">
                                         <Label htmlFor="email" className="text-foreground">
                                             {t("company.email")}
-                                            </Label>
+                                        </Label>
                                         <div className="relative">
                                             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                                 <MailIcon className="h-4 w-4 text-muted-foreground/70" />
@@ -101,11 +104,10 @@ const {
                                                 type="email"
                                                 className="pl-10 h-11"
                                                 placeholder="contact@acme.com"
-                                                value={data.email}
-                                                onChange={(e) => setData('email', e.target.value)}
+                                                {...register("email")}
                                             />
                                         </div>
-                                        {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+                                        <InputError message={errors.email?.message} />
                                     </div>
 
                                     <div className="space-y-2.5">
@@ -121,28 +123,82 @@ const {
                                                 type="tel"
                                                 className="pl-10 h-11"
                                                 placeholder="+1 (555) 000-0000"
-                                                value={data.phone}
-                                                onChange={(e) => setData('phone', e.target.value)}
+                                                {...register("phone")}
                                             />
                                         </div>
-                                        {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
+                                        <InputError message={errors.phone?.message} />
                                     </div>
-
-                                    <div className="space-y-2.5 flex flex-col justify-start">
+                                    <ImagePicker
+                                        label={t("company.logo")}
+                                        id="logo"
+                                        onChange={(file) => setValue("logo", file, { shouldValidate: true })}
+                                        error={errors.logo?.message as string}
+                                    />
+                                    <InputError message={errors.logo?.message as string} />
+                                    {/* <div className="space-y-2.5 flex flex-col justify-start">
                                         <Label htmlFor="logo" className="text-foreground">
                                             {t("company.logo")}
                                         </Label>
+
                                         <div className="relative">
                                             <Input
                                                 id="logo"
                                                 type="file"
                                                 accept="image/*"
-                                                onChange={(e) => setData('logo', e.target.files ? e.target.files[0] : null)}
+                                                {...register("logo")}
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    setValue("logo", file, { shouldValidate: true });
+                                                }}
                                                 className="h-11 file:mr-4 file:py-1 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer pt-2"
                                             />
+
                                             <ImagePlusIcon className="absolute right-3 top-3 h-5 w-5 text-muted-foreground/50 pointer-events-none" />
                                         </div>
-                                        {errors.logo && <p className="text-sm text-destructive">{errors.logo}</p>}
+
+                                        <InputError message={errors.logo?.message as string} />
+                                    </div> */}
+
+
+
+                                    <div className="space-y-2.5">
+                                        <Label htmlFor="vat_number" className="text-foreground">
+                                            {t("company.vat_number")}
+                                        </Label>
+                                        <div className="relative">
+                                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                                <BuildingIcon className="h-4 w-4 text-muted-foreground/70" />
+                                            </div>
+                                            <Input
+                                                id="vat_number"
+                                                type="text"
+                                                className="pl-10 h-11"
+                                                placeholder="123456789"
+                                                {...register("vat_number")}
+
+                                            />
+                                        </div>
+                                        <InputError message={errors.vat_number?.message} />
+                                    </div>
+
+                                    <div className="space-y-2.5">
+                                        <Label htmlFor="registration_number" className="text-foreground">
+                                            {t("company.registration_number")}
+                                        </Label>
+                                        <div className="relative">
+                                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                                <BuildingIcon className="h-4 w-4 text-muted-foreground/70" />
+                                            </div>
+                                            <Input
+                                                id="registration_number"
+                                                type="text"
+                                                className="pl-10 h-11"
+                                                placeholder="123456789"
+                                                {...register("registration_number")}
+
+                                            />
+                                        </div>
+                                        <InputError message={errors.registration_number?.message} />
                                     </div>
                                 </div>
                             </div>
@@ -159,7 +215,7 @@ const {
                                     <div className="space-y-2.5 md:col-span-2">
                                         <Label htmlFor="address" className="text-foreground">
                                             {t("company.street_address")}
-                                            </Label>
+                                        </Label>
                                         <div className="relative">
                                             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                                 <MapPinIcon className="h-4 w-4 text-muted-foreground/70" />
@@ -169,64 +225,60 @@ const {
                                                 type="text"
                                                 className="pl-10 h-11"
                                                 placeholder="123 Main St, Suite 100"
-                                                value={data.address}
-                                                onChange={(e) => setData('address', e.target.value)}
+                                                {...register("address")}
                                             />
                                         </div>
-                                        {errors.address && <p className="text-sm text-destructive">{errors.address}</p>}
+                                        <InputError message={errors.address?.message} />
                                     </div>
 
                                     <div className="space-y-2.5">
                                         <Label htmlFor="city" className="text-foreground">
                                             {t("company.city")}
-                                            </Label>
+                                        </Label>
                                         <Input
                                             id="city"
                                             type="text"
                                             className="h-11"
                                             placeholder="New York"
-                                            value={data.city}
-                                            onChange={(e) => setData('city', e.target.value)}
+                                            {...register("city")}
                                         />
-                                        {errors.city && <p className="text-sm text-destructive">{errors.city}</p>}
+                                        <InputError message={errors.city?.message} />
                                     </div>
 
                                     <div className="space-y-2.5 border-none">
                                         <Label htmlFor="state" className="text-foreground">
                                             {t("company.state")}
-                                            </Label>
+                                        </Label>
                                         <Input
                                             id="state"
                                             type="text"
                                             className="h-11"
                                             placeholder="NY"
-                                            value={data.state}
-                                            onChange={(e) => setData('state', e.target.value)}
+                                            {...register("state")}
                                         />
-                                        {errors.state && <p className="text-sm text-destructive">{errors.state}</p>}
+                                        <InputError message={errors.state?.message} />
                                     </div>
 
                                     <div className="space-y-2.5">
                                         <Label htmlFor="zip" className="text-foreground">
                                             {t("company.zip")}
-                                            </Label>
+                                        </Label>
                                         <Input
                                             id="zip"
                                             type="text"
                                             className="h-11"
                                             placeholder="10001"
-                                            value={data.zip}
-                                            onChange={(e) => setData('zip', e.target.value)}
+                                            {...register("zip")}
                                         />
-                                        {errors.zip && <p className="text-sm text-destructive">{errors.zip}</p>}
+                                        <InputError message={errors.zip?.message} />
                                     </div>
 
-                                    <div className="space-y-2.5 border-none">
+                                    {/* <div className="space-y-2.5 border-none">
                                         <Label htmlFor="country_id" className="text-foreground">
                                             {t("company.country")}
-                                            </Label>
+                                        </Label>
                                         <Select
-                                            value={data.country_id}
+                                            // value={data.country_id}
                                             onValueChange={handleCountryChange}
                                         >
                                             <SelectTrigger id="country_id" className="w-full h-11">
@@ -240,25 +292,52 @@ const {
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        {errors.country_id && <p className="text-sm text-destructive">{errors.country_id}</p>}
-                                    </div>
+                                        <InputError message={errors.country_id?.message} />
+                                    </div> */}
+
+                                    <Controller
+                                        name="country_id"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Select
+                                                onValueChange={(value) => {
+                                                    field.onChange(value);
+                                                    handleCountryChange(value);
+                                                }}
+                                                value={field.value}
+                                            >
+                                                <SelectTrigger className="w-full h-11">
+                                                    <SelectValue placeholder={t("company.select_country")} />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {countries?.map((country) => (
+                                                        <SelectItem key={country.id} value={country.id.toString()}>
+                                                            {country.name_ar}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        )}
+                                    />
+
+                                    <InputError message={errors.country_id?.message} />
                                 </div>
                             </div>
 
                             <div className="flex justify-end pt-8 border-t border-border mt-8">
-                                <Button 
-                                    type="submit" 
-                                    disabled={processing} 
-                                    size="lg" 
+                                <Button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    size="lg"
                                     className="px-8 h-12 text-base font-medium transition-transform active:scale-95"
                                 >
-                                    {processing ? t('common.saving') : t('common.save')}
+                                    {isSubmitting ? t('common.saving') : t('common.save')}
                                 </Button>
                             </div>
                         </form>
                     </CardContent>
                 </Card>
             </div>
-       </>
+        </>
     );
 }

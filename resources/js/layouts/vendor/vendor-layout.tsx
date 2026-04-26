@@ -13,7 +13,7 @@ export default function VendorLayout({ children, title = 'Vendor Dashboard' }: V
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50 flex font-sans transition-colors duration-300">
+        <div className="h-screen flex overflow-hidden bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50">
             <Head title={title} />
 
             <VendorSidebar
@@ -24,14 +24,14 @@ export default function VendorLayout({ children, title = 'Vendor Dashboard' }: V
 
 
             {/* Main Content */}
-            <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+            <main className="flex-1 flex flex-col min-w-0">
                 <VendorHeader
                     setSidebarOpen={setSidebarOpen}
                 />
 
                 {/* Page Content */}
-                <div className="flex-1 overflow-auto">
-                    <div className="p-4 sm:p-6 lg:p-3  mx-auto">
+                <div className="flex-1 overflow-y-auto">
+                    <div className="p-4 sm:p-6 lg:p-3 mx-auto">
                         {children}
                     </div>
                 </div>

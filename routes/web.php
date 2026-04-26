@@ -1,26 +1,26 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
-use Inertia\Inertia;
+// use Illuminate\Support\Facades\Route;
+// use Laravel\Fortify\Features;
+// use Inertia\Inertia;
 
 
 
-Route::inertia('/', 'home', [
-    'canRegister' => Features::enabled(Features::registration()),
-])->name('home');
-
-
-
-
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
-});
+// Route::inertia('/', 'home', [
+//     'canRegister' => Features::enabled(Features::registration()),
+// ])->name('home');
 
 
 
 
+
+// Route::middleware(['auth', 'verified'])->group(function () {
+//     Route::inertia('dashboard', 'dashboard')->name('dashboard');
+// });
+
+
+
+require __DIR__.'/redirect.php';
 require __DIR__.'/settings.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/companies.php';

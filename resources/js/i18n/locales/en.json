@@ -5,7 +5,29 @@
     "delete": "Delete",
      "update":"Update",
      "updated_successfully":"Updated successfully",
-     "something_went_wrong":"Something went wrong"
+     "something_went_wrong":"Something went wrong",
+     "upload-image":"Upload Image",
+     "file-size-limit":"File size must be less than 2MB",
+     "file-type-limit":"File type must be image",
+     "choose-file":"Choose File",
+     "remove":"Remove",
+     "change":"Change"
+  },
+  "auth": {
+    "register": "Register",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "create_account": "Create Account",
+    "already_have_account": "Already have an account?",
+    "login": "Log in",
+    "forgot_password": "Forgot password?",
+    "remember_me": "Remember me",
+    "dont_have_account": "Don't have an account?",
+    "sign_up": "Sign up"
+    
+    
   },
   "dashboard": {
     "dashboard": "Dashboard",
@@ -51,6 +73,18 @@
     "zip": "ZIP Code",
     "country": "Country",
     "select_country": "Select a country",
-    "address": "Address"
+    "address": "Address",
+    "vat_number": "VAT Number",
+    "registration_number": "Registration Number",
+    "name_required": "Company name is required",
+    "email_required": "Email is required",
+    "email_invalid": "Email is invalid",
+    "phone_required": "Phone is required",
+    "address_required": "Address is required",
+    "city_required": "City is required",
+    "country_required": "Country is required",
+    "file_invalid": "File is invalid",
+    "file_size_invalid": "File size must be less than 2MB",
+    "file_type_invalid": "File type must be image"
   }
 }
