@@ -1,28 +1,28 @@
-import React, { startTransition, useTransition } from 'react'
-import { Menu, Bell, Search, CreditCard, Users, Sun, Moon, LogOut, Settings } from 'lucide-react';
+
+import { Menu, Bell, LogOut, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { useTranslation } from 'react-i18next';
 import ToggleLang from './ui/language-toggle';
 import ThemeToggle from './ui/theme-toggle';
-
+import { usePage } from '@inertiajs/react';
+import { SharedData } from '@/types';
+import { Link } from '@inertiajs/react';
+import { logout } from '@/routes';
+import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
+import { router } from '@inertiajs/react';
 export default function VendorHeader({ setSidebarOpen }: { setSidebarOpen: (open: boolean) => void }) {
-    const { t, i18n } = useTranslation()
-    const isRtl = i18n.language === "ar"
-   
 
-   
+    const { t } = useTranslation();
+    const { auth } = usePage<SharedData>().props;
+    const cleanup = useMobileNavigation();
+    const handleLogout = () => {
+        cleanup();
+        router.flushAll();
+    };
 
-  function changeLanguage(lang: string) {
-    i18n.changeLanguage(lang);
-  }
 
-  const switch_language = () => {
-    const newLang = i18n.language === 'en' ? 'ar' : 'en';
-    changeLanguage(newLang);
-  };
 
 
     return (
@@ -37,11 +37,11 @@ export default function VendorHeader({ setSidebarOpen }: { setSidebarOpen: (open
             </div>
 
             <div className="flex items-center gap-2 sm:gap-4">
-              
+
                 <div className="hidden sm:flex items-center gap-1 me-2 border-e border-neutral-200 dark:border-neutral-800 pe-4">
                     <ToggleLang />
                     <ThemeToggle />
-                    
+
                 </div>
 
                 {/* Notifications */}
@@ -63,17 +63,13 @@ export default function VendorHeader({ setSidebarOpen }: { setSidebarOpen: (open
                     <DropdownMenuContent align="end" className="w-56 rounded-xl shadow-xl">
                         <DropdownMenuLabel className="font-normal">
                             <div className="flex flex-col space-y-1">
-                                <p className="text-sm font-medium leading-none">John Doe</p>
+                                <p className="text-sm font-medium leading-none">{auth.user.name}</p>
                                 <p className="text-xs leading-none text-neutral-500 dark:text-neutral-400">
-                                    john.doe@example.com
+                                    {auth.user.email}
                                 </p>
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="cursor-pointer gap-2">
-                            {/* <User className="w-4 h-4" /> */}
-                            <span>Profile</span>
-                        </DropdownMenuItem>
                         <DropdownMenuItem className="cursor-pointer gap-2">
                             <Settings className="w-4 h-4" />
                             <span>Settings</span>
@@ -81,7 +77,9 @@ export default function VendorHeader({ setSidebarOpen }: { setSidebarOpen: (open
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="cursor-pointer gap-2 text-red-600 dark:text-red-400 focus:bg-red-50 dark:focus:bg-red-950">
                             <LogOut className="w-4 h-4" />
-                            <span>Log out</span>
+                            <Link href={logout()}
+                                as="button"
+                                onClick={handleLogout}>{t('auth.logout')}</Link>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

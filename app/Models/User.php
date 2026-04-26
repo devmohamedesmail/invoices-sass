@@ -32,8 +32,14 @@ class User extends Authenticatable
         ];
     }
 
-    public function companies()
+    // public function companies()
+    // {
+    //     return $this->hasMany(Company::class);
+    // }
+
+
+    public function company()
     {
-        return $this->hasMany(Company::class);
+        return $this->hasOne(Company::class, 'user_id');
     }
 }

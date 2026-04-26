@@ -7,6 +7,13 @@ import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import i18n from './i18n/index';
 import ClientLayout from '@/layouts/vendor/vendor-layout';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 const lang = i18n.language || 'en'
@@ -20,7 +27,7 @@ i18n.on('languageChanged', (lng) => {
     document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr'
 })
 
-
+const queryClient = new QueryClient()
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -44,10 +51,12 @@ createInertiaApp({
     strictMode: true,
     withApp(app) {
         return (
-            <TooltipProvider delayDuration={0}>
-                {app}
-                <Toaster />
-            </TooltipProvider>
+            <QueryClientProvider client={queryClient}>
+                <TooltipProvider delayDuration={0}>
+                    {app}
+                    <Toaster />
+                </TooltipProvider>
+            </QueryClientProvider>
         );
     },
     progress: {

@@ -25,7 +25,8 @@
     "forgot_password": "نسيت كلمة المرور؟",
     "remember_me": "تذكرني",
     "dont_have_account": "ليس لديك حساب؟",
-    "sign_up": "تسجيل"
+    "sign_up": "تسجيل",
+    "logout": "تسجيل الخروج"
   },
   "dashboard": {
     "dashboard": "لوحة التحكم",
@@ -52,7 +53,8 @@
       "invoices": "الفواتير",
       "payments": "المدفوعات",
       "team": "الفريق",
-      "settings": "الإعدادات"
+      "settings": "الإعدادات",
+      "invoices-types": "أنواع الفواتير"
     }
   },
   "company": {
@@ -84,5 +86,13 @@
     "file_invalid": "ملف غير صالح",
     "file_size_invalid": "حجم الملف يجب أن يكون أقل من 2 ميجابايت",
     "file_type_invalid": "نوع الملف يجب أن يكون صورة"
+  },
+   "invoices": {
+    "add_invoice_type": "إضافة نوع فاتورة",
+    "name_ar": "الاسم بالعربية",
+    "name_en": "الاسم بالإنجليزية",
+    "is_active": "هل هو نشط"
+
+    
   }
 }

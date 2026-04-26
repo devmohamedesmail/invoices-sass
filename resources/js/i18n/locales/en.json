@@ -3,15 +3,15 @@
     "save": "Save",
     "edit": "Edit",
     "delete": "Delete",
-     "update":"Update",
-     "updated_successfully":"Updated successfully",
-     "something_went_wrong":"Something went wrong",
-     "upload-image":"Upload Image",
-     "file-size-limit":"File size must be less than 2MB",
-     "file-type-limit":"File type must be image",
-     "choose-file":"Choose File",
-     "remove":"Remove",
-     "change":"Change"
+    "update": "Update",
+    "updated_successfully": "Updated successfully",
+    "something_went_wrong": "Something went wrong",
+    "upload-image": "Upload Image",
+    "file-size-limit": "File size must be less than 2MB",
+    "file-type-limit": "File type must be image",
+    "choose-file": "Choose File",
+    "remove": "Remove",
+    "change": "Change"
   },
   "auth": {
     "register": "Register",
@@ -25,9 +25,8 @@
     "forgot_password": "Forgot password?",
     "remember_me": "Remember me",
     "dont_have_account": "Don't have an account?",
-    "sign_up": "Sign up"
-    
-    
+    "sign_up": "Sign up",
+    "logout": "Logout"
   },
   "dashboard": {
     "dashboard": "Dashboard",
@@ -54,7 +53,8 @@
       "invoices": "Invoices",
       "payments": "Payments",
       "team": "Team",
-      "settings": "Settings"
+      "settings": "Settings",
+      "invoices-types": "Invoices Types"
     }
   },
   "company": {
@@ -86,5 +86,13 @@
     "file_invalid": "File is invalid",
     "file_size_invalid": "File size must be less than 2MB",
     "file_type_invalid": "File type must be image"
+  },
+  "invoices": {
+    "add_invoice_type": "Add Invoice Type",
+    "name_ar": "Arabic Name",
+    "name_en": "English Name",
+    "is_active": "Is Active"
+
+    
   }
 }

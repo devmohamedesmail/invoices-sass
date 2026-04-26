@@ -25,3 +25,4 @@ require __DIR__.'/settings.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/companies.php';
 require __DIR__.'/vendor.php';
+require __DIR__.'/invoices.php';

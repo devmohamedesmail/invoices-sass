@@ -33,4 +33,9 @@ class Company extends Model
     {
         return $this->belongsTo(Country::class);
     }
+
+    public function invoiceTypes()
+    {
+        return $this->hasMany(InvoiceType::class);
+    }
 }
