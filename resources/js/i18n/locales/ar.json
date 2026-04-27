@@ -18,7 +18,11 @@
     "no_results": "لا توجد نتائج",
     "loading": "جار التحميل...",
     "create": "إنشاء",
-    "back": "رجوع"
+    "back": "رجوع",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "added_successfully": "تم الإضافة بنجاح",
+    "error_occurred": "حدث خطأ"
   },
   "auth": {
     "register": "تسجيل",
@@ -178,7 +182,9 @@
     "client-state-invalid": "ولاية العميل غير صحيحة",
     "client-country-invalid": "الدولة غير صحيحة",
     "delete-client": "حذف العميل",
-    "delete-client-description": "هل أنت متأكد من حذف هذا العميل؟"
+    "delete-client-description": "هل أنت متأكد من حذف هذا العميل؟",
+    "delete_invoice_type": "حذف نوع الفاتورة",
+    "delete_invoice_type_message": "هل أنت متأكد من حذف هذا النوع من الفواتير؟"
   },
   "home": {
     "hero": {

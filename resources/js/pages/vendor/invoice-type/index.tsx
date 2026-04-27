@@ -8,18 +8,21 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useTranslation } from 'react-i18next';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
-
+import InvoiceTypesTable from '@/components/invoice-types/invoice-types-table';
+import { Checkbox } from '@/components/ui/checkbox';
+import { toast } from 'sonner';
+import { Controller } from "react-hook-form"
 
 export default function InvoiceType({ invoice_types }: { invoice_types: any }) {
-  const { company } = usePage().props as any;
-  const { auth } = usePage<SharedData>().props;
+  const [openDelete, setOpenDelete] = useState(false);
   const [open, setOpen] = useState(false);
   const [editItem, setEditItem] = useState<any>(null);
+  const [deleteItem, setDeleteItem] = useState<any>(null);
   const { t } = useTranslation()
 
   // ✅ Zod Schema
@@ -36,6 +39,7 @@ export default function InvoiceType({ invoice_types }: { invoice_types: any }) {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    control,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -43,30 +47,32 @@ export default function InvoiceType({ invoice_types }: { invoice_types: any }) {
     },
   });
 
-  // const onSubmit = (data: FormData) => {
-  //   router.post("/invoice-types", data, {
-  //     onSuccess: () => {
-  //       reset();
-  //       setOpen(false);
-  //     },
-  //   });
-  // };
+
 
   const onSubmit = (data: FormData) => {
     if (editItem) {
+      console.log(data);
       router.put(`/invoice-types/${editItem.id}`, data, {
         onSuccess: () => {
           reset();
           setOpen(false);
           setEditItem(null);
+          toast.success(t('common.updated_successfully'));
         },
+        onError: () => {
+          toast.error(t('common.error_occurred'));
+        }
       });
     } else {
       router.post("/invoice-types", data, {
         onSuccess: () => {
           reset();
           setOpen(false);
+          toast.success(t('common.added_successfully'));
         },
+        onError: () => {
+          toast.error(t('common.error_occurred'));
+        }
       });
     }
   };
@@ -82,13 +88,23 @@ export default function InvoiceType({ invoice_types }: { invoice_types: any }) {
     });
   };
 
-  const handleDelete = (id: number) => {
-    if (!confirm("Are you sure?")) return;
+  const handleDelete = (item: any) => {
 
-    router.delete(`/invoice-types/${id}`, {
-      preserveScroll: true,
-    });
+    setOpenDelete(true);
+    setDeleteItem(item);
+
   };
+
+  const handleDeleteSubmit = () => {
+    router.delete(`/invoice-types/${deleteItem?.id}`, {
+      onSuccess: () => {
+        reset();
+        setOpenDelete(false);
+        setDeleteItem(null);
+        toast.success(t('common.updated_successfully'));
+      },
+    });
+  }
   return (
     <VendorLayout>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -122,84 +138,52 @@ export default function InvoiceType({ invoice_types }: { invoice_types: any }) {
 
             {/* Active */}
             <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                {...register("is_active")} />
-              <span>{t('invoices.is_active')}</span>
+
+             
+              <Controller
+                control={control}
+                name="is_active"
+                render={({ field }) => (
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                )}
+              />
+              <Label htmlFor="is_active">{t('invoices.is_active')}</Label>
             </div>
 
             <DialogFooter>
               <Button disabled={isSubmitting} type="submit">{t('common.save')}</Button>
+              <Button disabled={isSubmitting} type="button" variant="outline" onClick={() => setOpen(false)}>{t('common.cancel')}</Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
+      <InvoiceTypesTable invoice_types={invoice_types} handleEdit={handleEdit} handleDelete={handleDelete} />
 
-      <div className="mt-6">
-        <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300">
-              <tr>
 
-                <th className="p-3">{t('invoices.name_ar')}</th>
-                <th className="p-3">{t('invoices.name_en')}</th>
-                <th className="p-3">{t('invoices.is_active')}</th>
-                <th className="p-3 text-right">{t('common.actions')}</th>
-              </tr>
-            </thead>
 
-            <tbody>
-              {invoice_types?.length > 0 ? (
-                invoice_types.map((item: any, index: number) => (
-                  <tr
-                    key={item.id}
-                    className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-900"
-                  >
-                  
+      <Dialog open={openDelete} onOpenChange={setOpenDelete}>
 
-                    <td className="p-3 font-medium">{item.name_ar}</td>
 
-                    <td className="p-3">{item.name_en}</td>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('invoices.delete_invoice_type')}</DialogTitle>
+          </DialogHeader>
 
-                    <td className="p-3">
-                      {item.is_active ? (
-                        <span className="text-green-600">Active</span>
-                      ) : (
-                        <span className="text-red-500">Inactive</span>
-                      )}
-                    </td>
+          <p>{t('invoices.delete_invoice_type_message')}</p>
+          <p>{deleteItem?.name_ar}</p>
+          <DialogFooter>
+            <Button disabled={isSubmitting} type="button" onClick={handleDeleteSubmit}>{t('common.save')}</Button>
+            <Button disabled={isSubmitting} type="button" variant="outline" onClick={() => setOpenDelete(false)}>{t('common.cancel')}</Button>
+          </DialogFooter>
+        </DialogContent>
 
-                    <td className="p-3">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          onClick={() => handleEdit(item)}
-                          className="px-3 py-1 text-xs rounded-md bg-blue-500 text-white hover:bg-blue-600"
-                        >
-                          {t('common.edit')}
-                        </button>
 
-                        <button
-                          onClick={() => handleDelete(item.id)}
-                          className="px-3 py-1 text-xs rounded-md bg-red-500 text-white hover:bg-red-600"
-                        >
-                          {t('common.delete')}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td className="p-4 text-center text-neutral-500" colSpan={5}>
-                    No invoice types found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      </Dialog>
+
     </VendorLayout>
   )
 }

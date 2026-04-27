@@ -11,24 +11,6 @@ class ClientController extends Controller
 {
     use HasCompany;
 
-    // public function index()
-    // {
-    //     try {
-    //         $company = $this->getCompany();
-    //         $clients = Client::where('company_id', $company->id)
-    //             ->withCount('invoices')
-    //             ->latest()
-    //             ->get();
-
-    //         return Inertia::render('vendor/clients/index', [
-    //             'clients' => $clients,
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         return Inertia::render('vendor/errors/errors', [
-    //             'error' => $e->getMessage(),
-    //         ]);
-    //     }
-    // }
 
     public function index(Request $request)
     {
