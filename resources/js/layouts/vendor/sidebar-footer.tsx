@@ -18,8 +18,8 @@ export default function SidebarFooter({ isCollapsed }: { isCollapsed: boolean })
                 </div>
                 {!isCollapsed && (
                     <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">{user?.name}</p>
-                        <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                        <p className="text-sm font-medium text-white truncate">{user?.name}</p>
+                        <p className="text-xs text-white truncate">{user?.email}</p>
                     </div>
                 )}
             </div>

@@ -6,7 +6,7 @@ export default function SidebarLogoSection({ isCollapsed }: { isCollapsed: boole
     return (
         <div className="flex h-16 items-center justify-between border-b border-border px-6">
             <div className="flex items-center gap-3">
-                <div className="flex h-16 w-16 items-center justify-center rounded-lg ">
+                <div className="flex h-16 w-16 items-center justify-center rounded-lg p-2 bg-white ">
                     {company.logo && (
                         <img src={company.logo} alt={company.name} className='object-cover rounded-lg w-full h-full' />
                     )}
@@ -15,7 +15,7 @@ export default function SidebarLogoSection({ isCollapsed }: { isCollapsed: boole
 
                 {!isCollapsed && (
                     <div className="flex flex-col">
-                        <span className="text-lg font-bold text-foreground">{company.name}</span>
+                        <span className="text-lg font-bold text-primary-foreground">{company.name}</span>
                         {/* <span className="text-xs text-muted-foreground">{company.name_ar}</span> */}
                     </div>
                 )}

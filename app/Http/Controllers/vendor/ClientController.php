@@ -11,7 +11,12 @@ class ClientController extends Controller
 {
     use HasCompany;
 
-
+    /**
+     * Display a listing of the resource.
+     * @param \Illuminate\Http\Request $request
+     * @return \Inertia\Response
+     * @throws \Exception
+     */
     public function index(Request $request)
     {
         try {
@@ -40,8 +45,15 @@ class ClientController extends Controller
         }
     }
 
+    /**
+     * Store a newly created resource.
+     * @param \Illuminate\Http\Request $request
+     * @return \Inertia\Response
+     * @throws \Exception
+     */
     public function store(Request $request)
     {
+        
         try {
             $company = $this->getCompany();
 
@@ -55,12 +67,14 @@ class ClientController extends Controller
                 'country' => 'nullable|string|max:100',
             ]);
 
-            Client::create([
+            $client = Client::create([
                 'company_id' => $company->id,
                 ...$data,
             ]);
 
-            return redirect()->back();
+            return redirect()->back()->with([
+                'new_client' => $client,
+            ])->with('flash_new_client', true);
         } catch (\Exception $e) {
             return Inertia::render('vendor/errors/errors', [
                 'error' => $e->getMessage(),
@@ -68,6 +82,13 @@ class ClientController extends Controller
         }
     }
 
+    /**
+     * Update the specified resource.
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Client $client
+     * @return \Inertia\Response
+     * @throws \Exception
+     */
     public function update(Request $request, Client $client)
     {
         try {
@@ -93,6 +114,12 @@ class ClientController extends Controller
         }
     }
 
+    /**
+     * Remove the specified resource.
+     * @param \App\Models\Client $client
+     * @return \Inertia\Response
+     * @throws \Exception
+     */
     public function destroy(Client $client)
     {
         try {

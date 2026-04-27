@@ -19,6 +19,7 @@ Route::controller(InvoiceController::class)->group(function () {
     Route::get('/invoices/create',       'create')->name('invoices.create');
     Route::post('/invoices',             'store')->name('invoices.store');
     Route::put('/invoices/{invoice}',    'update')->name('invoices.update');
+    Route::get('/invoices/show/{invoice}',    'show')->name('invoices.show');
     Route::delete('/invoices/{invoice}', 'destroy')->name('invoices.destroy');
 });
 

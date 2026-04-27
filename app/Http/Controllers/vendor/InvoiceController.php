@@ -7,31 +7,23 @@ use App\Models\Client;
 use App\Models\Invoice;
 use App\Models\InvoiceService;
 use App\Models\InvoiceType;
+use App\Traits\HasCompany;
+use Illuminate\Foundation\Exceptions\Renderer\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class InvoiceController extends Controller
 {
-    /**
-     * Return the authenticated user's company (throws 403 if none).
-     */
-    private function getCompany()
-    {
-        $company = Auth::user()->company;
+    use HasCompany;
 
-        abort_unless($company, 403, 'No company found for this user.');
-
-        return $company;
-    }
-
-    /* ─────────────────────────────── LIST ─────────────────────────────── */
 
     public function index(Request $request)
     {
+        try{
         $company = $this->getCompany();
-
-        $invoices = Invoice::with(['client', 'invoiceType'])
+        $invoices = Invoice::with(['client', 'invoiceType' , 'services', 'company'])
             ->where('company_id', $company->id)
             ->when($request->search, function ($q, $search) {
                 $q->where(function ($inner) use ($search) {
@@ -43,10 +35,15 @@ class InvoiceController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return inertia('vendor/invoices/index', [
+        return Inertia::render('vendor/invoices/index', [
             'invoices' => $invoices,
             'filters'  => $request->only('search'),
         ]);
+        }catch(Exception $e){
+            return Inertia::render('vendor/errors/errors', [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /* ─────────────────────────────── CREATE ───────────────────────────── */
@@ -250,5 +247,26 @@ class InvoiceController extends Controller
         $invoice->delete();
 
         return redirect()->route('invoices.index')->with('success', 'Invoice deleted successfully.');
+    }
+
+
+    public function show(Invoice $invoice)
+    {
+        try{
+            $company = $this->getCompany();
+            abort_unless($invoice->company_id === $company->id, 403);
+            $invoice->load([
+                'client',
+                'services',
+                'company',
+            ]);
+            return Inertia::render('vendor/invoices/show', [
+                'invoice' => $invoice,
+            ]);
+        }catch(Exception $e){
+            return Inertia::render('vendor/errors/error', [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

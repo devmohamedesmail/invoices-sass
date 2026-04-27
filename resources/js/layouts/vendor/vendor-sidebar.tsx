@@ -55,6 +55,12 @@ export default function VendorSidebar({ isCollapsed, isMobileOpen, onClose }: Si
             // active: route().current('clients.*') ?? false 
         },
         { 
+            name: t('vendor.sidebar.new_invoice'), 
+            href: '/invoices/create', 
+            icon: FileText, 
+            // active: route().current('invoices.*') ?? false 
+        },
+        { 
             name: t('vendor.sidebar.invoices'), 
             href: '/invoices', 
             icon: FileText, 
@@ -92,7 +98,7 @@ export default function VendorSidebar({ isCollapsed, isMobileOpen, onClose }: Si
             {/* Sidebar */}
             <aside
                 className={cn(
-                    `fixed ${i18n.language === 'ar' ? 'right-0 border-l-2 ' : 'left-0' } top-0 z-50 h-screen bg-card border-r border-border transition-all duration-300 ease-in-out`,
+                    `fixed bg-primary ${i18n.language === 'ar' ? 'right-0 border-l-2 ' : 'left-0' } top-0 z-50 h-screen  border-r border-border transition-all duration-300 ease-in-out`,
                     'flex flex-col',
                     isCollapsed && !isMobileOpen ? 'w-20' : 'w-64',
                     isMobileOpen ? 'translate-x-0' : `${i18n.language === 'ar' ? 'translate-x-full' : '-translate-x-full'} lg:translate-x-0`
@@ -118,7 +124,7 @@ export default function VendorSidebar({ isCollapsed, isMobileOpen, onClose }: Si
                                         'hover:bg-accent hover:text-accent-foreground',
                                         item.active
                                             ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20'
-                                            : 'text-muted-foreground',
+                                            : 'text-white',
                                         isCollapsed && 'justify-center'
                                     )}
                                 >

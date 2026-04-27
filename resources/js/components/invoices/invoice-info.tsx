@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SectionCard from './section-card'
 import { FileText, UserPlus } from 'lucide-react'
 import { Label } from '@/components/ui/label'
@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import InputError from '../input-error'
 import Field from './field'
 import { UseFormRegister } from 'react-hook-form';
+import CreateClientDialog from './create-client-dialog'
 
 type Props = {
     control: any;
@@ -17,12 +18,12 @@ type Props = {
     clients: any;
     invoice_types: any;
     isRTL: boolean;
-    setClientModalOpen: (open: boolean) => void;
     register: UseFormRegister<any>; 
 };
 
-export default function InvoiceInfo({ control, errors, clients, invoice_types, isRTL, setClientModalOpen , register }: Props) {
+export default function InvoiceInfo({ control, errors, clients, invoice_types, isRTL , register }: Props) {
     const { t } = useTranslation();
+    const [isClientModalOpen, setClientModalOpen] = useState(false);
     return (
         <SectionCard icon={<FileText size={18} />} title={t('invoices.invoice_number')}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -117,6 +118,8 @@ export default function InvoiceInfo({ control, errors, clients, invoice_types, i
                     <Input type="date" {...register('due_date')} />
                 </Field>
             </div>
+            
+            <CreateClientDialog isClientModalOpen={isClientModalOpen} setClientModalOpen={setClientModalOpen} />
         </SectionCard>
     )
 }

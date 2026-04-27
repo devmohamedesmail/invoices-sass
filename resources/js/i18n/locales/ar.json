@@ -69,7 +69,8 @@
       "team": "الفريق",
       "settings": "الإعدادات",
       "invoices-types": "أنواع الفواتير",
-      "clients": "العملاء"
+      "clients": "العملاء",
+      "new_invoice": "فاتورة جديدة"
     }
   },
   "validation": {
@@ -184,7 +185,17 @@
     "delete-client": "حذف العميل",
     "delete-client-description": "هل أنت متأكد من حذف هذا العميل؟",
     "delete_invoice_type": "حذف نوع الفاتورة",
-    "delete_invoice_type_message": "هل أنت متأكد من حذف هذا النوع من الفواتير؟"
+    "delete_invoice_type_message": "هل أنت متأكد من حذف هذا النوع من الفواتير؟",
+    "print-invoice": "طباعة الفاتورة",
+    "show-invoice": "عرض الفاتورة",
+    "edit-invoice": "تعديل الفاتورة",
+    "delete-invoice": "حذف الفاتورة",
+    "validation":{
+      "required": "هذا الحقل مطلوب",
+      "min": "يجب أن تكون القيمة أكبر من أو تساوي الحد الأدنى",
+      "required_service": "يجب إضافة خدمة واحدة على الأقل"
+    }
+    
   },
   "home": {
     "hero": {
