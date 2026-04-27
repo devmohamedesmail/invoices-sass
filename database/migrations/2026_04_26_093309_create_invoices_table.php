@@ -32,16 +32,6 @@ return new class extends Migration
             $table->string('car_engine')->nullable();
             $table->string('car_transmission')->nullable();
             $table->string('car_fuel')->nullable();
-            $table->string('car_color')->nullable();
-            $table->string('car_year')->nullable();
-            $table->string('car_vin')->nullable();
-            $table->string('car_plate')->nullable();
-            $table->string('car_chassis')->nullable();
-            $table->string('car_engine')->nullable();
-            $table->string('car_transmission')->nullable();
-            $table->string('car_fuel')->nullable();
-            
-            
             $table->decimal('subtotal', 10, 2);
             $table->decimal('tax', 10, 2);
             $table->decimal('total', 10, 2);

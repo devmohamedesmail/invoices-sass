@@ -15,6 +15,22 @@ class CompanyController extends Controller
 {
 
     use UploadsToCloudinary;
+
+    public function index()
+    {
+        $user    = Auth::user();
+        $company = $user->company;
+
+        if (! $company) {
+            return redirect()->route('companies.create.page');
+        }
+
+        return Inertia::render('vendor/company/update', [
+            'company'   => $company,
+            'countries' => \App\Models\Country::all(),
+        ]);
+    }
+
     //
     public function createPage()
     {

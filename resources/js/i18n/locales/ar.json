@@ -3,6 +3,7 @@
     "save": "حفظ",
     "edit": "تعديل",
     "delete": "حذف",
+    "cancel": "إلغاء",
     "update": "تحديث",
     "updated_successfully": "تم التحديث بنجاح",
     "something_went_wrong": "حدث خطأ",
@@ -11,7 +12,13 @@
     "file-type-limit": "نوع الملف يجب أن يكون صورة",
     "choose-file": "اختر ملف",
     "remove": "حذف",
-    "change": "تغيير"
+    "change": "تغيير",
+    "actions": "الإجراءات",
+    "search": "بحث",
+    "no_results": "لا توجد نتائج",
+    "loading": "جار التحميل...",
+    "create": "إنشاء",
+    "back": "رجوع"
   },
   "auth": {
     "register": "تسجيل",
@@ -30,7 +37,10 @@
   },
   "dashboard": {
     "dashboard": "لوحة التحكم",
-    "countries": "الدول"
+    "countries": "الدول",
+    "clients": "العملاء",
+    "invoices": "الفواتير",
+    "todayInvoices": "فواتير اليوم"
   },
   "countries": {
     "add_country": "إضافة دولة",
@@ -54,8 +64,14 @@
       "payments": "المدفوعات",
       "team": "الفريق",
       "settings": "الإعدادات",
-      "invoices-types": "أنواع الفواتير"
+      "invoices-types": "أنواع الفواتير",
+      "clients": "العملاء"
     }
+  },
+  "validation": {
+    "required": "هذا الحقل مطلوب",
+    "min": "يجب أن تكون القيمة أكبر من أو تساوي الحد الأدنى",
+    "required_service": "يجب إضافة خدمة واحدة على الأقل"
   },
   "company": {
     "profile": "ملف الشركة",
@@ -87,12 +103,121 @@
     "file_size_invalid": "حجم الملف يجب أن يكون أقل من 2 ميجابايت",
     "file_type_invalid": "نوع الملف يجب أن يكون صورة"
   },
-   "invoices": {
+  "invoices": {
+    "invoices": "الفواتير",
+    "create_invoice": "إنشاء فاتورة",
+    "new_invoice": "فاتورة جديدة",
     "add_invoice_type": "إضافة نوع فاتورة",
     "name_ar": "الاسم بالعربية",
     "name_en": "الاسم بالإنجليزية",
-    "is_active": "هل هو نشط"
-
-    
+    "is_active": "هل هو نشط",
+    "invoice_number": "رقم الفاتورة",
+    "invoice_type": "نوع الفاتورة",
+    "payment_type": "طريقة الدفع",
+    "invoice_date": "تاريخ الفاتورة",
+    "due_date": "تاريخ الاستحقاق",
+    "client": "العميل",
+    "select_client": "اختر عميلاً",
+    "select_invoice_type": "اختر نوع الفاتورة",
+    "select_payment_type": "اختر طريقة الدفع",
+    "payment_cash": "نقداً",
+    "payment_card": "بطاقة",
+    "payment_bank": "تحويل بنكي",
+    "payment_check": "شيك",
+    "car_info": "معلومات السيارة",
+    "car_no": "رقم السيارة",
+    "car_type": "نوع السيارة",
+    "car_model": "موديل السيارة",
+    "car_color": "لون السيارة",
+    "car_year": "سنة الصنع",
+    "car_vin": "رقم الهيكل",
+    "car_plate": "رقم اللوحة",
+    "car_chassis": "رقم الشاصي",
+    "car_engine": "المحرك",
+    "car_transmission": "ناقل الحركة",
+    "car_fuel": "نوع الوقود",
+    "services": "الخدمات",
+    "add_service": "إضافة خدمة",
+    "service_name": "اسم الخدمة",
+    "description": "الوصف",
+    "unit_price": "سعر الوحدة",
+    "quantity": "الكمية",
+    "total_price": "الإجمالي",
+    "subtotal": "المجموع الفرعي",
+    "tax": "الضريبة (%)",
+    "total": "الإجمالي",
+    "paid_amount": "المبلغ المدفوع",
+    "balance": "المبلغ المتبقي",
+    "notes": "ملاحظات",
+    "terms": "الشروط والأحكام",
+    "summary": "ملخص الفاتورة",
+    "additional_info": "معلومات إضافية",
+    "no_invoices": "لا توجد فواتير",
+    "search_placeholder": "ابحث برقم الفاتورة أو اسم العميل...",
+    "delete_confirm": "هل أنت متأكد من حذف هذه الفاتورة؟",
+    "created_at": "تاريخ الإنشاء",
+    "client_name": "العميل",
+    "amount": "المبلغ",
+    "status": "الحالة",
+    "client-name": "اسم العميل",
+    "client-email": "بريد العميل",
+    "client-phone": "هاتف العميل",
+    "client-invoices": "الفواتير",
+    "clients": "العملاء",
+    "client-name-required": "اسم العميل مطلوب",
+    "client-email-required": "بريد العميل مطلوب",
+    "client-phone-required": "هاتف العميل مطلوب",
+    "client-address-required": "عنوان العميل مطلوب",
+    "client-city-required": "مدينة العميل مطلوبة",
+    "client-state-required": "ولاية العميل مطلوبة",
+    "client-country-required": "الدولة مطلوبة",
+    "client-email-invalid": "بريد العميل غير صحيح",
+    "client-phone-invalid": "هاتف العميل غير صحيح",
+    "client-address-invalid": "عنوان العميل غير صحيح",
+    "client-city-invalid": "مدينة العميل غير صحيحة",
+    "client-state-invalid": "ولاية العميل غير صحيحة",
+    "client-country-invalid": "الدولة غير صحيحة",
+    "delete-client": "حذف العميل",
+    "delete-client-description": "هل أنت متأكد من حذف هذا العميل؟"
+  },
+  "home": {
+    "hero": {
+      "title": "فواتير احترافية بكل سهولة",
+      "subtitle": "قم بإنشاء وتتبع وإدارة فواتيرك بسهولة. دعم لعملات ولغات متعددة وإدارة سلسة للعملاء.",
+      "get_started": "ابدأ مجانًا",
+      "dashboard": "الذهاب للوحة التحكم"
+    },
+    "features": {
+      "title": "كل ما تحتاجه لإدارة أعمالك",
+      "subtitle": "ميزات قوية مصممة لمساعدتك على استلام مدفوعاتك بشكل أسرع وإدارة عملائك بسلاسة.",
+      "invoicing": {
+        "title": "فواتير احترافية",
+        "desc": "أنشئ فواتير جميلة وقابلة للتخصيص في ثوانٍ تعكس هويتك التجارية."
+      },
+      "clients": {
+        "title": "إدارة العملاء",
+        "desc": "احتفظ بجميع تفاصيل عملائك وسجلهم وتفضيلاتهم في مكان واحد منظم."
+      },
+      "multilingual": {
+        "title": "متعدد اللغات و RTL",
+        "desc": "دعم كامل للغتين الإنجليزية والعربية مع تخطيطات مثالية من اليمين إلى اليسار."
+      },
+      "tracking": {
+        "title": "تتبع المدفوعات",
+        "desc": "راقب الدفعات الجزئية والأرصدة، ولا تفقد أبدًا ما يدينون لك به."
+      }
+    },
+    "footer": {
+      "rights": "جميع الحقوق محفوظة.",
+      "product": "المنتج",
+      "features": "المميزات",
+      "pricing": "الأسعار",
+      "company": "الشركة",
+      "about": "معلومات عنا",
+      "contact": "اتصل بنا",
+      "legal": "قانوني",
+      "privacy": "سياسة الخصوصية",
+      "terms": "شروط الخدمة"
+    }
   }
 }

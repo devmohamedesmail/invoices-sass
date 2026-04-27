@@ -3,85 +3,252 @@
 namespace App\Http\Controllers\vendor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
+use App\Models\Invoice;
+use App\Models\InvoiceService;
+use App\Models\InvoiceType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
-    public function index()
+    /**
+     * Return the authenticated user's company (throws 403 if none).
+     */
+    private function getCompany()
     {
-        return inertia('vendor/invoices/index');
+        $company = Auth::user()->company;
+
+        abort_unless($company, 403, 'No company found for this user.');
+
+        return $company;
     }
+
+    /* ─────────────────────────────── LIST ─────────────────────────────── */
+
+    public function index(Request $request)
+    {
+        $company = $this->getCompany();
+
+        $invoices = Invoice::with(['client', 'invoiceType'])
+            ->where('company_id', $company->id)
+            ->when($request->search, function ($q, $search) {
+                $q->where(function ($inner) use ($search) {
+                    $inner->where('invoice_number', 'like', "%{$search}%")
+                          ->orWhereHas('client', fn($c) => $c->where('name', 'like', "%{$search}%"));
+                });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return inertia('vendor/invoices/index', [
+            'invoices' => $invoices,
+            'filters'  => $request->only('search'),
+        ]);
+    }
+
+    /* ─────────────────────────────── CREATE ───────────────────────────── */
+
+    public function create()
+    {
+        $company = $this->getCompany();
+
+        $count = Invoice::where('company_id', $company->id)->count();
+        $nextNumber = 'INV-' . str_pad($count + 1, 4, '0', STR_PAD_LEFT);
+
+        return inertia('vendor/invoices/create', [
+            'clients'      => Client::where('company_id', $company->id)->get(['id', 'name', 'email', 'phone']),
+            'invoice_types' => InvoiceType::where('company_id', $company->id)->where('is_active', true)->get(['id', 'name_ar', 'name_en']),
+            'next_invoice_number' => $nextNumber,
+        ]);
+    }
+
+    /* ─────────────────────────────── STORE ─────────────────────────────── */
 
     public function store(Request $request)
     {
-        $request->validate([
-            'invoice_number' => 'required',
-            'invoice_type' => 'required',
-            'payment_type' => 'required',
-            'invoice_date' => 'required',
-            'due_date' => 'required',
-            'car_no' => 'required',
-            'car_type' => 'required',
-            'car_model' => 'required',
-            'car_color' => 'required',
-            'car_year' => 'required',
-            'car_vin' => 'required',
-            'car_plate' => 'required',
-            'car_chassis' => 'required',
-            'car_engine' => 'required',
-            'car_transmission' => 'required',
-            'car_fuel' => 'required',
-            'subtotal' => 'required',
-            'tax' => 'required',
-            'total' => 'required',
-            'paid_amount' => 'required',
-            'balance' => 'required',
-            'notes' => 'required',
-            'terms' => 'required',
+        $company = $this->getCompany();
+
+        $validated = $request->validate([
+            'client_id'        => 'required|exists:clients,id',
+            'invoice_type_id'  => 'required|exists:invoice_types,id',
+            'invoice_number'   => 'required|string|max:100',
+            'payment_type'     => 'required|string|max:100',
+            'invoice_date'     => 'required|date',
+            'due_date'         => 'required|date',
+            'car_no'           => 'nullable|string|max:50',
+            'car_type'         => 'nullable|string|max:100',
+            'car_model'        => 'nullable|string|max:100',
+            'car_color'        => 'nullable|string|max:50',
+            'car_year'         => 'nullable|string|max:4',
+            'car_vin'          => 'nullable|string|max:50',
+            'car_plate'        => 'nullable|string|max:50',
+            'car_chassis'      => 'nullable|string|max:100',
+            'car_engine'       => 'nullable|string|max:100',
+            'car_transmission' => 'nullable|string|max:100',
+            'car_fuel'         => 'nullable|string|max:50',
+            'tax'              => 'required|numeric|min:0',
+            'paid_amount'      => 'required|numeric|min:0',
+            'notes'            => 'nullable|string',
+            'terms'            => 'nullable|string',
+            'services'         => 'required|array|min:1',
+            'services.*.name'       => 'required|string|max:255',
+            'services.*.description'=> 'nullable|string',
+            'services.*.unit_price' => 'required|numeric|min:0',
+            'services.*.quantity'   => 'required|integer|min:1',
         ]);
 
-        $invoice = Invoice::create($request->all());
+        DB::transaction(function () use ($validated, $company) {
+            $subtotal = collect($validated['services'])
+                ->sum(fn($s) => $s['unit_price'] * $s['quantity']);
 
-        return redirect()->route('invoices.index');
+            $tax   = $validated['tax'];
+            $total = $subtotal + ($subtotal * $tax / 100);
+
+            $invoice = Invoice::create([
+                'company_id'       => $company->id,
+                'client_id'        => $validated['client_id'],
+                'invoice_type_id'  => $validated['invoice_type_id'],
+                'invoice_number'   => $validated['invoice_number'],
+                'payment_type'     => $validated['payment_type'],
+                'invoice_date'     => $validated['invoice_date'],
+                'due_date'         => $validated['due_date'],
+                'car_no'           => $validated['car_no'] ?? null,
+                'car_type'         => $validated['car_type'] ?? null,
+                'car_model'        => $validated['car_model'] ?? null,
+                'car_color'        => $validated['car_color'] ?? null,
+                'car_year'         => $validated['car_year'] ?? null,
+                'car_vin'          => $validated['car_vin'] ?? null,
+                'car_plate'        => $validated['car_plate'] ?? null,
+                'car_chassis'      => $validated['car_chassis'] ?? null,
+                'car_engine'       => $validated['car_engine'] ?? null,
+                'car_transmission' => $validated['car_transmission'] ?? null,
+                'car_fuel'         => $validated['car_fuel'] ?? null,
+                'subtotal'         => $subtotal,
+                'tax'              => $tax,
+                'total'            => $total,
+                'paid_amount'      => $validated['paid_amount'],
+                'balance'          => $total - $validated['paid_amount'],
+                'notes'            => $validated['notes'] ?? null,
+                'terms'            => $validated['terms'] ?? null,
+            ]);
+
+            foreach ($validated['services'] as $svc) {
+                InvoiceService::create([
+                    'company_id'  => $company->id,
+                    'invoice_id'  => $invoice->id,
+                    'name'        => $svc['name'],
+                    'description' => $svc['description'] ?? null,
+                    'unit_price'  => $svc['unit_price'],
+                    'quantity'    => $svc['quantity'],
+                    'total_price' => $svc['unit_price'] * $svc['quantity'],
+                ]);
+            }
+        });
+
+        return redirect()->route('invoices.index')->with('success', 'Invoice created successfully.');
     }
+
+    /* ─────────────────────────────── UPDATE ────────────────────────────── */
 
     public function update(Request $request, Invoice $invoice)
     {
-        $request->validate([
-            'invoice_number' => 'required',
-            'invoice_type' => 'required',
-            'payment_type' => 'required',
-            'invoice_date' => 'required',
-            'due_date' => 'required',
-            'car_no' => 'required',
-            'car_type' => 'required',
-            'car_model' => 'required',
-            'car_color' => 'required',
-            'car_year' => 'required',
-            'car_vin' => 'required',
-            'car_plate' => 'required',
-            'car_chassis' => 'required',
-            'car_engine' => 'required',
-            'car_transmission' => 'required',
-            'car_fuel' => 'required',
-            'subtotal' => 'required',
-            'tax' => 'required',
-            'total' => 'required',
-            'paid_amount' => 'required',
-            'balance' => 'required',
-            'notes' => 'required',
-            'terms' => 'required',
+        $company = $this->getCompany();
+        abort_unless($invoice->company_id === $company->id, 403);
+
+        $validated = $request->validate([
+            'client_id'        => 'required|exists:clients,id',
+            'invoice_type_id'  => 'required|exists:invoice_types,id',
+            'invoice_number'   => 'required|string|max:100',
+            'payment_type'     => 'required|string|max:100',
+            'invoice_date'     => 'required|date',
+            'due_date'         => 'required|date',
+            'car_no'           => 'nullable|string|max:50',
+            'car_type'         => 'nullable|string|max:100',
+            'car_model'        => 'nullable|string|max:100',
+            'car_color'        => 'nullable|string|max:50',
+            'car_year'         => 'nullable|string|max:4',
+            'car_vin'          => 'nullable|string|max:50',
+            'car_plate'        => 'nullable|string|max:50',
+            'car_chassis'      => 'nullable|string|max:100',
+            'car_engine'       => 'nullable|string|max:100',
+            'car_transmission' => 'nullable|string|max:100',
+            'car_fuel'         => 'nullable|string|max:50',
+            'tax'              => 'required|numeric|min:0',
+            'paid_amount'      => 'required|numeric|min:0',
+            'notes'            => 'nullable|string',
+            'terms'            => 'nullable|string',
+            'services'         => 'required|array|min:1',
+            'services.*.name'        => 'required|string|max:255',
+            'services.*.description' => 'nullable|string',
+            'services.*.unit_price'  => 'required|numeric|min:0',
+            'services.*.quantity'    => 'required|integer|min:1',
         ]);
 
-        $invoice->update($request->all());
+        DB::transaction(function () use ($validated, $invoice) {
+            $subtotal = collect($validated['services'])
+                ->sum(fn($s) => $s['unit_price'] * $s['quantity']);
 
-        return redirect()->route('invoices.index');
+            $tax   = $validated['tax'];
+            $total = $subtotal + ($subtotal * $tax / 100);
+
+            $invoice->update([
+                'client_id'        => $validated['client_id'],
+                'invoice_type_id'  => $validated['invoice_type_id'],
+                'invoice_number'   => $validated['invoice_number'],
+                'payment_type'     => $validated['payment_type'],
+                'invoice_date'     => $validated['invoice_date'],
+                'due_date'         => $validated['due_date'],
+                'car_no'           => $validated['car_no'] ?? null,
+                'car_type'         => $validated['car_type'] ?? null,
+                'car_model'        => $validated['car_model'] ?? null,
+                'car_color'        => $validated['car_color'] ?? null,
+                'car_year'         => $validated['car_year'] ?? null,
+                'car_vin'          => $validated['car_vin'] ?? null,
+                'car_plate'        => $validated['car_plate'] ?? null,
+                'car_chassis'      => $validated['car_chassis'] ?? null,
+                'car_engine'       => $validated['car_engine'] ?? null,
+                'car_transmission' => $validated['car_transmission'] ?? null,
+                'car_fuel'         => $validated['car_fuel'] ?? null,
+                'subtotal'         => $subtotal,
+                'tax'              => $tax,
+                'total'            => $total,
+                'paid_amount'      => $validated['paid_amount'],
+                'balance'          => $total - $validated['paid_amount'],
+                'notes'            => $validated['notes'] ?? null,
+                'terms'            => $validated['terms'] ?? null,
+            ]);
+
+            $invoice->services()->delete();
+
+            foreach ($validated['services'] as $svc) {
+                InvoiceService::create([
+                    'company_id'  => $invoice->company_id,
+                    'invoice_id'  => $invoice->id,
+                    'name'        => $svc['name'],
+                    'description' => $svc['description'] ?? null,
+                    'unit_price'  => $svc['unit_price'],
+                    'quantity'    => $svc['quantity'],
+                    'total_price' => $svc['unit_price'] * $svc['quantity'],
+                ]);
+            }
+        });
+
+        return redirect()->route('invoices.index')->with('success', 'Invoice updated successfully.');
     }
+
+    /* ─────────────────────────────── DESTROY ───────────────────────────── */
 
     public function destroy(Invoice $invoice)
     {
+        $company = $this->getCompany();
+        abort_unless($invoice->company_id === $company->id, 403);
+
+        $invoice->services()->delete();
         $invoice->delete();
 
-        return redirect()->route('invoices.index');
+        return redirect()->route('invoices.index')->with('success', 'Invoice deleted successfully.');
     }
 }
