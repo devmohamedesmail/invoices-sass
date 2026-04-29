@@ -22,7 +22,8 @@
     "active": "Active",
     "inactive": "Inactive",
     "added_successfully": "Added successfully",
-    "error_occurred": "Error occurred"
+    "error_occurred": "Error occurred",
+    "saving": "Saving..."
   },
   "auth": {
     "register": "Register",
@@ -206,9 +207,6 @@
       "min": "Value must be greater than or equal to minimum",
       "required_service": "At least one service is required"
     }
-    
-    
-    
   },
   "home": {
     "hero": {
@@ -248,6 +246,49 @@
       "legal": "Legal",
       "privacy": "Privacy Policy",
       "terms": "Terms of Service"
+    }
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "countries": "Countries",
+      "settings": "Settings"
+    },
+    "error": {
+      "title": "Something went wrong",
+      "defaultMessage": "An unexpected error occurred. Please try again later.",
+      "back": "Back to Dashboard"
+    },
+    "settings": {
+      "title": "App Settings",
+      "general_info": "General Information",
+      "general_desc": "Update your application basic information.",
+
+      "app_name_ar": "App Name (Arabic)",
+      "app_name_en": "App Name (English)",
+
+      "copy_right_ar": "Copyright (Arabic)",
+      "copy_right_en": "Copyright (English)",
+
+      "phone": "Phone Number",
+      "whatsapp": "WhatsApp",
+
+      "descriptions": "Descriptions & About",
+      "descriptions_desc": "Detailed texts about your application.",
+
+      "description_ar": "Description (Arabic)",
+      "description_en": "Description (English)",
+
+      "about_ar": "About Us (Arabic)",
+      "about_en": "About Us (English)",
+
+      "images": "Logos & Favicons",
+      "images_desc": "Update your application visual identity assets.",
+
+      "app_logo": "App Logo (Light)",
+      "app_logo_black": "App Logo (Dark)",
+      "app_favicon": "Favicon (Light)",
+      "app_favicon_white": "Favicon (Dark)"
     }
   }
 }

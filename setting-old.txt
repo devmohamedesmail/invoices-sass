@@ -1,0 +1,297 @@
+import AdminLayout from '@/layouts/admin/admin-layout'
+import React, { FormEvent, useEffect } from 'react'
+import { usePage } from '@inertiajs/react'
+import { useTranslation } from 'react-i18next'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import ImagePicker from '@/components/ui/image-picker'
+import { toast } from 'sonner'
+import { Loader2, Save } from 'lucide-react'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { router } from '@inertiajs/react'
+
+export default function SettingPage({settings}: {settings: any}) {
+  const { t } = useTranslation()
+  const { props } = usePage<any>()
+
+
+
+  
+
+ const settingsSchema = z.object({
+  app_name_ar: z.string().min(1, 'مطلوب'),
+  app_name_en: z.string().min(1, 'Required'),
+  copy_right_ar: z.string().optional(),
+  copy_right_en: z.string().optional(),
+  description_ar: z.string().optional(),
+  description_en: z.string().optional(),
+  about_ar: z.string().optional(),
+  about_en: z.string().optional(),
+  phone: z.string().optional(),
+  whatsapp: z.string().optional(),
+  app_logo: z.any().optional(),
+  app_logo_black: z.any().optional(),
+  app_favicon: z.any().optional(),
+  app_favicon_white: z.any().optional(),
+})
+
+
+const {
+  register,
+  handleSubmit,
+  setValue,
+  formState: { errors, isSubmitting }
+} = useForm({
+  resolver: zodResolver(settingsSchema),
+  defaultValues: {
+    app_name_ar: settings?.app_name_ar || '',
+    app_name_en: settings?.app_name_en || '',
+    copy_right_ar: settings?.copy_right_ar || '',
+    copy_right_en: settings?.copy_right_en || '',
+    description_ar: settings?.description_ar || '',
+    description_en: settings?.description_en || '',
+    about_ar: settings?.about_ar || '',
+    about_en: settings?.about_en || '',
+    phone: settings?.phone || '',
+    whatsapp: settings?.whatsapp || '',
+  }
+})
+
+  const { data, setData, post, processing, errors } = useForm({
+    _method: 'put',
+    app_name_ar: settings?.app_name_ar || '',
+    app_name_en: settings?.app_name_en || '',
+    copy_right_ar: settings?.copy_right_ar || '',
+    copy_right_en: settings?.copy_right_en || '',
+    description_ar: settings?.description_ar || '',
+    description_en: settings?.description_en || '',
+    about_ar: settings?.about_ar || '',
+    about_en: settings?.about_en || '',
+    phone: settings?.phone || '',
+    whatsapp: settings?.whatsapp || '',
+    app_logo: null as File | null,
+    app_logo_black: null as File | null,
+    app_favicon: null as File | null,
+    app_favicon_white: null as File | null,
+  })
+
+  useEffect(() => {
+    if (props.flash?.success) {
+      toast.success(props.flash.success)
+    }
+    if (props.flash?.error) {
+      toast.error(props.flash.error)
+    }
+  }, [props.flash])
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    post(`/admin/settings/${settings?.id || 1}`, {
+      preserveScroll: true,
+      forceFormData: true,
+      onSuccess: () => {
+        // success is handled by the flash message
+      },
+    })
+  }
+
+  return (
+    <AdminLayout>
+      <div className="flex-1 space-y-4 p-8 pt-6">
+        <div className="flex items-center justify-between space-y-2">
+          <h2 className="text-3xl font-bold tracking-tight">{t('settings.title', 'App Settings')}</h2>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2 mb-4">
+            {/* General Info */}
+            <Card className="col-span-1">
+              <CardHeader>
+                <CardTitle>{t('settings.general_info', 'General Information')}</CardTitle>
+                <CardDescription>{t('settings.general_desc', 'Update your application basic information.')}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="app_name_ar">{t('settings.app_name_ar', 'App Name (Arabic)')} *</Label>
+                  <Input 
+                    id="app_name_ar" 
+                    value={data.app_name_ar} 
+                    onChange={e => setData('app_name_ar', e.target.value)} 
+                    required
+                  />
+                  {errors.app_name_ar && <span className="text-sm text-red-500">{errors.app_name_ar}</span>}
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="app_name_en">{t('settings.app_name_en', 'App Name (English)')} *</Label>
+                  <Input 
+                    id="app_name_en" 
+                    value={data.app_name_en} 
+                    onChange={e => setData('app_name_en', e.target.value)} 
+                    required
+                  />
+                  {errors.app_name_en && <span className="text-sm text-red-500">{errors.app_name_en}</span>}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="copy_right_ar">{t('settings.copy_right_ar', 'Copyright (Arabic)')}</Label>
+                  <Input 
+                    id="copy_right_ar" 
+                    value={data.copy_right_ar} 
+                    onChange={e => setData('copy_right_ar', e.target.value)} 
+                  />
+                  {errors.copy_right_ar && <span className="text-sm text-red-500">{errors.copy_right_ar}</span>}
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="copy_right_en">{t('settings.copy_right_en', 'Copyright (English)')}</Label>
+                  <Input 
+                    id="copy_right_en" 
+                    value={data.copy_right_en} 
+                    onChange={e => setData('copy_right_en', e.target.value)} 
+                  />
+                  {errors.copy_right_en && <span className="text-sm text-red-500">{errors.copy_right_en}</span>}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone">{t('settings.phone', 'Phone Number')}</Label>
+                  <Input 
+                    id="phone" 
+                    value={data.phone} 
+                    onChange={e => setData('phone', e.target.value)} 
+                    dir="ltr"
+                  />
+                  {errors.phone && <span className="text-sm text-red-500">{errors.phone}</span>}
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="whatsapp">{t('settings.whatsapp', 'Whatsapp')}</Label>
+                  <Input 
+                    id="whatsapp" 
+                    value={data.whatsapp} 
+                    onChange={e => setData('whatsapp', e.target.value)} 
+                    dir="ltr"
+                  />
+                  {errors.whatsapp && <span className="text-sm text-red-500">{errors.whatsapp}</span>}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Descriptions & About */}
+            <Card className="col-span-1">
+              <CardHeader>
+                <CardTitle>{t('settings.descriptions', 'Descriptions & About')}</CardTitle>
+                <CardDescription>{t('settings.descriptions_desc', 'Detailed texts about your application.')}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="description_ar">{t('settings.description_ar', 'Description (Arabic)')}</Label>
+                  <textarea 
+                    id="description_ar" 
+                    value={data.description_ar} 
+                    onChange={e => setData('description_ar', e.target.value)} 
+                    className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                  {errors.description_ar && <span className="text-sm text-red-500">{errors.description_ar}</span>}
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="description_en">{t('settings.description_en', 'Description (English)')}</Label>
+                  <textarea 
+                    id="description_en" 
+                    value={data.description_en} 
+                    onChange={e => setData('description_en', e.target.value)} 
+                    className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                  {errors.description_en && <span className="text-sm text-red-500">{errors.description_en}</span>}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="about_ar">{t('settings.about_ar', 'About Us (Arabic)')}</Label>
+                  <textarea 
+                    id="about_ar" 
+                    value={data.about_ar} 
+                    onChange={e => setData('about_ar', e.target.value)} 
+                    className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                  {errors.about_ar && <span className="text-sm text-red-500">{errors.about_ar}</span>}
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="about_en">{t('settings.about_en', 'About Us (English)')}</Label>
+                  <textarea 
+                    id="about_en" 
+                    value={data.about_en} 
+                    onChange={e => setData('about_en', e.target.value)} 
+                    className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                  {errors.about_en && <span className="text-sm text-red-500">{errors.about_en}</span>}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Images */}
+            <Card className="col-span-1 md:col-span-2">
+              <CardHeader>
+                <CardTitle>{t('settings.images', 'Logos & Favicons')}</CardTitle>
+                <CardDescription>{t('settings.images_desc', 'Update your application visual identity assets.')}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                  <ImagePicker
+                    id="app_logo"
+                    label={t('settings.app_logo', 'App Logo (Light)')}
+                    initialPreview={settings?.app_logo}
+                    onChange={(file) => setData('app_logo', file)}
+                    error={errors.app_logo}
+                  />
+                  <ImagePicker
+                    id="app_logo_black"
+                    label={t('settings.app_logo_black', 'App Logo (Dark)')}
+                    initialPreview={settings?.app_logo_black}
+                    onChange={(file) => setData('app_logo_black', file)}
+                    error={errors.app_logo_black}
+                  />
+                  <ImagePicker
+                    id="app_favicon"
+                    label={t('settings.app_favicon', 'Favicon (Light)')}
+                    initialPreview={settings?.app_favicon}
+                    onChange={(file) => setData('app_favicon', file)}
+                    error={errors.app_favicon}
+                  />
+                  <ImagePicker
+                    id="app_favicon_white"
+                    label={t('settings.app_favicon_white', 'Favicon (Dark)')}
+                    initialPreview={settings?.app_favicon_white}
+                    onChange={(file) => setData('app_favicon_white', file)}
+                    error={errors.app_favicon_white}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="flex justify-end">
+            <Button type="submit" disabled={processing} className="w-full md:w-auto min-w-[150px]">
+              {processing ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t('common.saving', 'Saving...')}
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" />
+                  {t('common.save', 'Save Settings')}
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
+      </div>
+    </AdminLayout>
+  )
+}

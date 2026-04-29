@@ -1,25 +1,28 @@
-
+import React from 'react'
 import { cn } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, FileText, Settings, CreditCard, Users,} from 'lucide-react';
-import SidebarLogoSection from '@/layouts/vendor/sidebar-logo-section';
-import SidebarFooter from '@/layouts/vendor/sidebar-footer';
+import {
+    Menu,
+    X,
+    Bell,
+    Search,
+    LayoutDashboard,
+    FileText,
+    Settings,
+    HelpCircle,
+    LogOut,
+    CreditCard,
+    Users,
+    Sun,
+    Moon
+} from 'lucide-react';
+import SidebarFooter from '../vendor/sidebar-footer';
+import { NavUser } from '@/components/nav-user';
 
-
-interface SidebarProps {
-    isCollapsed: boolean
-    isMobileOpen: boolean
-    onClose?: () => void
-}
-
-
-export default function VendorSidebar({ isCollapsed, isMobileOpen, onClose }: SidebarProps) {
-    const { t, i18n } = useTranslation()
-
-    
-    
-
+export default function AdminSidebar({isCollapsed, isMobileOpen, onClose}: {isCollapsed: boolean, isMobileOpen: boolean, onClose: () => void}) {
+      const { t, i18n } = useTranslation()
+   
 
     const navigation = [
         { 
@@ -59,14 +62,14 @@ export default function VendorSidebar({ isCollapsed, isMobileOpen, onClose }: Si
             active: false 
         },
         { 
-            name: t('vendor.sidebar.settings'), 
-            href: '/companies/edit/page', 
+            name: t('admin.sidebar.settings'), 
+            href: '/admin/settings', 
             icon: Settings, 
             active: false 
         },
     ];
-    return (
-        <>
+  return (
+     <>
             {/* Mobile Overlay */}
             {isMobileOpen && (
                 <div
@@ -85,7 +88,9 @@ export default function VendorSidebar({ isCollapsed, isMobileOpen, onClose }: Si
                 )}
             >
                
-                <SidebarLogoSection isCollapsed={isCollapsed} />
+                {/* <SidebarLogoSection isCollapsed={isCollapsed} /> */}
+
+                
                 
                 
 
@@ -117,9 +122,10 @@ export default function VendorSidebar({ isCollapsed, isMobileOpen, onClose }: Si
                 </nav>
 
                 <SidebarFooter isCollapsed={isCollapsed} />
+                {/* <NavUser /> */}
+            
                 
             </aside>
         </>
-
-    )
+  )
 }

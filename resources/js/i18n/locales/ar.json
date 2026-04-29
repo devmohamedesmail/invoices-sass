@@ -22,7 +22,8 @@
     "active": "نشط",
     "inactive": "غير نشط",
     "added_successfully": "تم الإضافة بنجاح",
-    "error_occurred": "حدث خطأ"
+    "error_occurred": "حدث خطأ",
+    "saving": "جاري الحفظ..."
   },
   "auth": {
     "register": "تسجيل",
@@ -246,6 +247,49 @@
       "legal": "قانوني",
       "privacy": "سياسة الخصوصية",
       "terms": "شروط الخدمة"
+    }
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "لوحة التحكم",
+      "countries": "الدول",
+      "settings": "الإعدادات"
+    },
+    "error": {
+      "title": "حدث خطأ ما",
+      "defaultMessage": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى لاحقاً.",
+      "back": "العودة للوحة التحكم"
+    },
+    "settings": {
+      "title": "إعدادات التطبيق",
+      "general_info": "المعلومات العامة",
+      "general_desc": "تحديث المعلومات الأساسية للتطبيق",
+
+      "app_name_ar": "اسم التطبيق (عربي)",
+      "app_name_en": "اسم التطبيق (إنجليزي)",
+
+      "copy_right_ar": "حقوق النشر (عربي)",
+      "copy_right_en": "حقوق النشر (إنجليزي)",
+
+      "phone": "رقم الهاتف",
+      "whatsapp": "واتساب",
+
+      "descriptions": "الوصف ومن نحن",
+      "descriptions_desc": "نصوص تفصيلية عن التطبيق",
+
+      "description_ar": "الوصف (عربي)",
+      "description_en": "الوصف (إنجليزي)",
+
+      "about_ar": "من نحن (عربي)",
+      "about_en": "من نحن (إنجليزي)",
+
+      "images": "الشعارات والأيقونات",
+      "images_desc": "تحديث الهوية البصرية للتطبيق",
+
+      "app_logo": "شعار التطبيق (فاتح)",
+      "app_logo_black": "شعار التطبيق (داكن)",
+      "app_favicon": "أيقونة الموقع (فاتح)",
+      "app_favicon_white": "أيقونة الموقع (داكن)"
     }
   }
 }
