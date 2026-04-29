@@ -163,6 +163,15 @@ export default function InvoicesTable({ invoices, handleDelete, paymentBadge, ba
                                         </DropdownMenuItem>
 
                                          <DropdownMenuItem
+                                            onClick={() => router.visit(`/invoices/show/preview/${invoice.id}`)}
+                                        >
+                                            <Eye size={14} />
+                                            {t('invoices.preview-invoice')}
+                                        </DropdownMenuItem>
+
+
+
+                                         <DropdownMenuItem
                                             onClick={() => router.visit(`/invoices/show/${invoice.id}`)}
                                         >
                                             <Eye size={14} />

@@ -20,6 +20,7 @@ Route::controller(InvoiceController::class)->group(function () {
     Route::post('/invoices',             'store')->name('invoices.store');
     Route::put('/invoices/{invoice}',    'update')->name('invoices.update');
     Route::get('/invoices/show/{invoice}',    'show')->name('invoices.show');
+    Route::get('/invoices/show/preview/{invoice}',    'show_preview')->name('invoices.show.preview');
     Route::delete('/invoices/{invoice}', 'destroy')->name('invoices.destroy');
 });
 

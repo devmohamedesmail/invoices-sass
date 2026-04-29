@@ -27,12 +27,13 @@ class AppServiceProvider extends ServiceProvider
 
 // share company to inertia
         Inertia::share([
-    'company' => function () {
-        return auth()->check()
-            ? auth()->user()->company
-            : null;
-    },
-]);
+            'company' => function () {
+                return auth()->check()
+                    ? auth()->user()->company
+                    : null;
+            },
+        ]);
+     
     }
 
     /**

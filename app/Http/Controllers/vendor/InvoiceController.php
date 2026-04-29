@@ -259,8 +259,36 @@ class InvoiceController extends Controller
                 'client',
                 'services',
                 'company',
+                'invoiceType'
             ]);
             return Inertia::render('vendor/invoices/show', [
+                'invoice' => $invoice,
+            ]);
+        }catch(Exception $e){
+            return Inertia::render('vendor/errors/error', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    /**
+     * Show invoice preview
+     * @param Invoice $invoice
+     * @return Inertia
+     * @author Olayemi
+     * @return mixed
+     */
+    public function show_preview(Invoice $invoice)
+    {
+        try{
+            $company = $this->getCompany();
+            abort_unless($invoice->company_id === $company->id, 403);
+            $invoice->load([
+                'client',
+                'services',
+                'company',
+                'invoiceType'
+            ]);
+            return Inertia::render('vendor/invoices/show-preview', [
                 'invoice' => $invoice,
             ]);
         }catch(Exception $e){

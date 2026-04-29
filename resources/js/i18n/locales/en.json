@@ -190,7 +190,18 @@
     "show-invoice": "Show Invoice",
     "edit-invoice": "Edit Invoice",
     "delete-invoice": "Delete Invoice",
-    "validation":{
+    "company_address": "Company Address",
+    "company_phone": "Company Phone",
+    "company_vat_number": "Company VAT Number",
+    "company_vat": "Company VAT",
+    "client_info": "Client Information",
+    "client_email": "Client Email",
+    "client_phone": "Client Phone",
+    "service": "Service",
+    "paid": "Paid",
+    "thank_you_for_your_business": "Thank you for your business",
+    "terms_and_conditions": "Terms & Conditions",
+    "validation": {
       "required": "This field is required",
       "min": "Value must be greater than or equal to minimum",
       "required_service": "At least one service is required"
