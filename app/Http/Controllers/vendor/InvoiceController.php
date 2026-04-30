@@ -297,4 +297,29 @@ class InvoiceController extends Controller
             ]);
         }
     }
+
+
+
+    public function edit_page(Invoice $invoice)
+    {
+        
+        try{
+            $company = $this->getCompany();
+            abort_unless($invoice->company_id === $company->id, 403);
+            $invoice->load([
+                'client',
+                'services',
+                'invoiceType'
+            ]);
+            return Inertia::render('vendor/invoices/edit', [
+                'invoice' => $invoice,
+                'clients' => Client::all(),
+                'invoice_types' => InvoiceType::all(),
+            ]);
+        }catch(Exception $e){
+            return Inertia::render('vendor/errors/error', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
 }

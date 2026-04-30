@@ -1,24 +1,29 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import AppLogoIcon from '@/components/app-logo-icon';
 import { home } from '@/routes';
 import type { AuthLayoutProps } from '@/types';
+import AppLogo from '@/components/ui/app-logo';
+
 
 export default function AuthSimpleLayout({
     children,
     title,
     description,
 }: AuthLayoutProps) {
+    const {settings}:any=usePage().props;
+   
     return (
         <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
-            <div className="w-full max-w-sm">
+            <div className="w-full max-w-md p-2 shadow-xl rounded-3xl px-5 py-10">
                 <div className="flex flex-col gap-8">
-                    <div className="flex flex-col items-center gap-4">
+                    <div className="flex flex-col items-center gap-4 ">
                         <Link
                             href={home()}
                             className="flex flex-col items-center gap-2 font-medium"
                         >
-                            <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" />
+                            <div className="mb-1 flex flex-col  items-center justify-center rounded-md">
+                               <img src={settings?.app_logo} alt="" className="w-44 h-32 object-contain" />
+                               <span>{settings?.app_name_ar}</span>
                             </div>
                             <span className="sr-only">{title}</span>
                         </Link>

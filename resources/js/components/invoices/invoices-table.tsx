@@ -178,6 +178,13 @@ export default function InvoicesTable({ invoices, handleDelete, paymentBadge, ba
                                             {t('invoices.show-invoice')}
                                         </DropdownMenuItem>
 
+                                         <DropdownMenuItem
+                                            onClick={() => router.visit(`/invoices/edit/${invoice.id}`)}
+                                        >
+                                            <Pencil size={14} />
+                                            {t('invoices.edit-invoice')}
+                                        </DropdownMenuItem>
+
                                         {/* Separator */}
                                         <div className="h-px bg-neutral-200 dark:bg-neutral-700 my-1" />
 

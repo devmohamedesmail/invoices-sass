@@ -26,6 +26,9 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('zip')->nullable();
             $table->longText('logo')->nullable();
+            $table->text('tax')->nullable();
+            
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

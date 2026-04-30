@@ -18,47 +18,47 @@ class CompanyController extends Controller
 
     public function index()
     {
-        $user    = Auth::user();
-        $company = $user->company;
+        try {
+            $user    = Auth::user();
+            $company = $user->company;
 
-        if (! $company) {
-            return redirect()->route('companies.create.page');
+            if (! $company) {
+                return redirect()->route('companies.create.page');
+            }
+
+            return Inertia::render('vendor/company/update', [
+                'company'   => $company,
+                'countries' => \App\Models\Country::all(),
+            ]);
+        } catch (Exception $e) {
+            return Inertia::render("vendor/errors/errors", [
+                "message" => $e->getMessage(),
+            ]);
         }
-
-        return Inertia::render('vendor/company/update', [
-            'company'   => $company,
-            'countries' => \App\Models\Country::all(),
-        ]);
     }
 
     //
     public function createPage()
     {
-        $user      = Auth::user();
-        $countries = Country::all();
-        return Inertia::render("vendor/company/create", [
-            "countries" => $countries,
-            "user"      => $user,
-        ]);
+        try {
+            $user      = Auth::user();
+            $countries = Country::all();
+            return Inertia::render("vendor/company/create", [
+                "countries" => $countries,
+                "user"      => $user,
+            ]);
+        } catch (Exception $e) {
+            return Inertia::render("vendor/errors/errors", [
+                "message" => $e->getMessage(),
+            ]);
+        }
     }
 
     public function storeCompany(Request $request)
     {
         try {
             $user = Auth::user();
-            // $request->validate([
-            //     "name"       => "required",
-            //     "email"      => "required",
-            //     "phone"      => "required",
-            //     "address"    => "required",
-            //     "city"       => "required",
-            //     "state"      => "required",
-            //     "zip"        => "required",
-            //     "country_id" => "required",
-            //     "logo"       => "required",
-            //     "vat_number" => "required",
-            //     "registration_number" => "required",
-            // ]);
+
             $company                      = new Company();
             $company->user_id             = $user->id;
             $company->name                = $request->name;
@@ -71,6 +71,7 @@ class CompanyController extends Controller
             $company->country_id          = $request->country_id;
             $company->vat_number          = $request->vat_number;
             $company->registration_number = $request->registration_number;
+            $company->tax                 = $request->tax;
 
             $baseSlug = Str::slug($request->name);
             $slug     = $baseSlug;
@@ -92,7 +93,9 @@ class CompanyController extends Controller
             $company->save();
             return redirect()->route("vendor.dashboard");
         } catch (Exception $e) {
-            return redirect()->back()->with("error", $e->getMessage());
+            return Inertia::render("vendor/errors/errors", [
+                "message" => $e->getMessage(),
+            ]);
         }
     }
 
@@ -107,7 +110,9 @@ class CompanyController extends Controller
                 "company"   => $company,
             ]);
         } catch (Exception $e) {
-            return redirect()->back()->with("error", $e->getMessage());
+            return Inertia::render("vendor/errors/errors", [
+                "message" => $e->getMessage(),
+            ]);
         }
     }
 
@@ -115,17 +120,6 @@ class CompanyController extends Controller
     {
         try {
 
-            // $request->validate([
-            //     "name"       => "required",
-            //     "email"      => "required",
-            //     "phone"      => "required",
-            //     "address"    => "required",
-            //     "city"       => "required",
-            //     "state"      => "required",
-            //     "zip"        => "required",
-            //     "country_id" => "required",
-            //    "logo" => "nullable|image",
-            // ]);
             $company             = Company::find($id);
             $company->name       = $request->name;
             $company->email      = $request->email;
@@ -138,6 +132,7 @@ class CompanyController extends Controller
 
             $company->vat_number          = $request->vat_number;
             $company->registration_number = $request->registration_number;
+            $company->tax                 = $request->tax;
 
             if ($request->hasFile('logo')) {
                 $company->logo = $this->uploadToCloudinary(
@@ -146,11 +141,12 @@ class CompanyController extends Controller
                 );
             }
 
-            // $company->logo = $logoPath;
             $company->save();
             return redirect()->back();
         } catch (Exception $e) {
-            return redirect()->back()->with("error", $e->getMessage());
+            return Inertia::render("vendor/errors/errors", [
+                "message" => $e->getMessage(),
+            ]);
         }
     }
 

@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\vendor\AccountController;
 use App\Models\Client;
 use App\Models\Company;
 use App\Models\Invoice;
@@ -19,3 +20,9 @@ Route::get('/vendor/dashboard', function () {
         'todayInvoices' => $todayInvoices,
     ]);
 })->name('vendor.dashboard');
+
+
+
+Route::controller(AccountController::class)->group(function(){
+    Route::get('/vendor/account', 'index')->name('vendor.account');
+});

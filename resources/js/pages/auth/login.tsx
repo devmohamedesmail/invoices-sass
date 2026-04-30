@@ -12,6 +12,7 @@ import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 import { useTranslation } from 'react-i18next';
 import AuthLayout from '@/layouts/auth-layout';
+import Header from '@/components/home/header';
 
 type Props = {
     status?: string;
@@ -26,7 +27,8 @@ export default function Login({
 }: Props) {
     const { t } = useTranslation();
     return (
-        <AuthLayout>
+        <AuthLayout title={t('auth.login')} description={t('auth.login_description')}>
+           
             <Head title={t('auth.login')} />
 
             <Form
@@ -114,6 +116,8 @@ export default function Login({
                     {status}
                 </div>
             )}
+
+           
         </AuthLayout>
     );
 }

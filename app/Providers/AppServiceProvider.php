@@ -1,6 +1,7 @@
 <?php
 namespace App\Providers;
 
+use App\Models\Setting;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,11 @@ class AppServiceProvider extends ServiceProvider
                     : null;
             },
         ]);
-     
+
+        Inertia::share([
+            'settings' => fn() => Setting::first(),
+        ]);
+
     }
 
     /**

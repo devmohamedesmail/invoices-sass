@@ -176,7 +176,7 @@ export default function CreateInvoice({ clients, invoice_types, next_invoice_num
                         <Button type="button" variant="outline" onClick={() => router.visit('/invoices')}>
                             {t('common.cancel')}
                         </Button>
-                        <Button type="submit" disabled={isSubmitting} className="min-w-36 bg-blue-600 hover:bg-blue-700 text-white">
+                        <Button type="submit" disabled={isSubmitting}>
                             {isSubmitting ? t('common.loading') : t('invoices.create_invoice')}
                         </Button>
                     </div>

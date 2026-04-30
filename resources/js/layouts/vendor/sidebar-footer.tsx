@@ -2,6 +2,7 @@ import React from 'react'
 import { cn } from '@/lib/utils'
 import { usePage } from '@inertiajs/react';
 import { SharedData } from '@/types';
+import { Link } from '@inertiajs/react';
 
 
 export default function SidebarFooter({ isCollapsed }: { isCollapsed: boolean }) {
@@ -17,10 +18,10 @@ export default function SidebarFooter({ isCollapsed }: { isCollapsed: boolean })
                     {user?.name?.charAt(0)}
                 </div>
                 {!isCollapsed && (
-                    <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white truncate">{user?.name}</p>
-                        <p className="text-xs text-white truncate">{user?.email}</p>
-                    </div>
+                    <Link href="/vendor/account" className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-black truncate">{user?.name}</p>
+                        <p className="text-xs text-black truncate">{user?.email}</p>
+                    </Link>
                 )}
             </div>
         </div>

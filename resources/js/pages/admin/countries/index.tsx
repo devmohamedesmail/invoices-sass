@@ -8,7 +8,16 @@ import {
   DialogTitle,
   DialogFooter,
   DialogTrigger,
+  DialogDescription
 } from "@/components/ui/dialog";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from "@/components/ui/table"
 import { router } from "@inertiajs/react";
 
 import { useForm } from "react-hook-form";
@@ -18,6 +27,10 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import AdminLayout from "@/layouts/admin/admin-layout";
+import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 
 // schema
 const countrySchema = z.object({
@@ -33,8 +46,10 @@ const countrySchema = z.object({
 
 type CountryForm = z.infer<typeof countrySchema>;
 
-export default function Countries({countries}: {countries: CountryForm[]}) {
+export default function Countries({ countries }: { countries: CountryForm[] }) {
   const { t, i18n } = useTranslation();
+  const [deleteDialogOpened, setDeleteDialogOpened] = useState(false)
+  const [deleteItem, setDeleteItem] = useState<any>(null)
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<CountryForm | null>(null);
@@ -53,19 +68,20 @@ export default function Countries({countries}: {countries: CountryForm[]}) {
 
   // submit
   const onSubmit = async (data: CountryForm) => {
-    console.log("data", data);
+
     try {
       if (editing) {
-       router.put(`/admin/countries/${(editing as any).id}`, data);
+        router.put(`/admin/countries/${(editing as any).id}`, data);
       } else {
-       router.post("/admin/countries", data);
+        router.post("/admin/countries", data);
       }
 
       reset();
       setEditing(null);
       setOpen(false);
+      toast.success(t('country.added_success'))
     } catch (e) {
-      console.error(e);
+      toast.error(t('common.error'))
     }
   };
 
@@ -77,117 +93,207 @@ export default function Countries({countries}: {countries: CountryForm[]}) {
   };
 
   // delete
-  const handleDelete = async (id: number) => {
-    await axios.delete(`/admin/countries/${id}`);
+  const handleDelete = async (country: any) => {
+    setDeleteDialogOpened(true)
+    setDeleteItem(country)
   };
 
+  const confirmDelete = () => {
+    if (!deleteItem?.id) return
+
+    router.delete(`/admin/countries/${deleteItem.id}`, {
+      preserveScroll: true,
+
+      onSuccess: () => {
+        toast.success(t('country.deleted_success', 'Deleted successfully'))
+        setDeleteDialogOpened(false)
+        setDeleteItem(null)
+      },
+
+      onError: () => {
+        toast.error(t('common.error', 'Something went wrong'))
+      }
+    })
+  }
+
   return (
-    <div className="p-6">
-      {/* ADD BUTTON */}
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <button className="bg-black text-white px-4 py-2 rounded">
-            {t("countries.add_country")}
-          </button>
-        </DialogTrigger>
+    <AdminLayout>
+      <div className="p-6">
+        {/* ADD BUTTON */}
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              {t("admin.countries.add_country")}
+            </Button>
+          </DialogTrigger>
 
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {editing ? t("countries.edit_country") : t("countries.add_country")}
-            </DialogTitle>
-          </DialogHeader>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                {editing ? t("admin.countries.edit_country") : t("admin.countries.add_country")}
+              </DialogTitle>
+            </DialogHeader>
 
-          {/* FORM */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <Input
-              placeholder={t("countries.name_ar")}
-              {...register("name_ar")}
-              className="w-full border p-2 rounded"
-            />
+            {/* FORM */}
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <Input
+                placeholder={t("admin.countries.name_ar")}
+                {...register("name_ar")}
+                className="w-full border p-2 rounded"
+              />
 
-            <Input
-              placeholder={t("countries.name_en")}
-              {...register("name_en")}
-              className="w-full border p-2 rounded"
-            />
+              <Input
+                placeholder={t("admin.countries.name_en")}
+                {...register("name_en")}
+                className="w-full border p-2 rounded"
+              />
 
-            <Input
-              placeholder={t("countries.code")}
-              {...register("code")}
-              className="w-full border p-2 rounded"
-            />
+              <Input
+                placeholder={t("admin.countries.code")}
+                {...register("code")}
+                className="w-full border p-2 rounded"
+              />
 
-            <Input
-              placeholder={t("countries.currency")}
-              {...register("currency")}
-              className="w-full border p-2 rounded"
-            />
+              <Input
+                placeholder={t("admin.countries.currency")}
+                {...register("currency")}
+                className="w-full border p-2 rounded"
+              />
 
-            <Input
-              placeholder={t("countries.currency_symbol")}
-              {...register("currency_symbol")}
-              className="w-full border p-2 rounded"
-            />
+              <Input
+                placeholder={t("admin.countries.currency_symbol")}
+                {...register("currency_symbol")}
+                className="w-full border p-2 rounded"
+              />
 
-            <Input
-              placeholder={t("countries.flag")}
-              {...register("flag")}
-              className="w-full border p-2 rounded"
-            />
+              <Input
+                placeholder={t("admin.countries.flag")}
+                {...register("flag")}
+                className="w-full border p-2 rounded"
+              />
 
-            <Input
-              placeholder={t("countries.vat")}
-              {...register("vat")}
-              className="w-full border p-2 rounded"
-            />
+              <Input
+                placeholder={t("admin.countries.vat")}
+                {...register("vat")}
+                className="w-full border p-2 rounded"
+              />
 
-            <div className="flex items-center gap-2">
-              <Input type="checkbox" {...register("is_active")} />
-              <label>{t("active")}</label>
-            </div>
+              <div className="flex items-center gap-2">
+                {/* <Input type="checkbox" {...register("is_active")} /> */}
+                <Checkbox {...register("is_active")} />
+                <Label>{t("common.active")}</Label>
+              </div>
+
+              <DialogFooter>
+
+                <Button type="submit">
+                  {t("common.save")}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+
+
+
+        {/* delete Dialog */}
+        <Dialog open={deleteDialogOpened} onOpenChange={setDeleteDialogOpened}>
+
+
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="text-center">
+                {t("admin.countries.delete_country_title")}
+              </DialogTitle>
+
+              <DialogDescription className="text-center">
+                {t("admin.countries.delete_country_message")}
+              </DialogDescription>
+            </DialogHeader>
 
             <DialogFooter>
-              
-              <Button type="submit">
-                {t("common.save")}
+              <Button variant="secondary" className="cursor-pointer" onClick={() => setDeleteDialogOpened(false)}>
+                {t("common.cancel")}
+              </Button>
+              <Button variant="destructive" className="cursor-pointer" onClick={confirmDelete}>
+                {t("common.delete")}
               </Button>
             </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
 
-      {/* Example list (replace with real data) */}
-    
+          </DialogContent>
+        </Dialog>
 
-      {/* list */}
-      <div className="mt-6 space-y-2">
-        {countries.map((country:any) => (
-          <div key={country.id} className="flex gap-2">
-            <p>{country.name_ar}</p>
-            <p>{country.name_en}</p>
-            <p>{country.code}</p>
-            <p>{country.currency}</p>
-            <p>{country.currency_symbol}</p>
-            <p>{country.flag}</p>
-            <p>{country.vat}</p>
-            <p>{country.is_active}</p>
-            <button
-              onClick={() => handleEdit(country)}
-              className="bg-blue-500 text-white px-2 py-1 rounded"
-            >
-              {t("edit")}
-            </button>
+        {/* Example list (replace with real data) */}
+        <div className="mt-6">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-center">{t("admin.countries.name_ar")}</TableHead>
+                <TableHead className="text-center">{t("admin.countries.name_en")}</TableHead>
+                <TableHead className="text-center">{t("admin.countries.code")}</TableHead>
+                <TableHead className="text-center">{t("admin.countries.currency")}</TableHead>
+                <TableHead className="text-center">{t("admin.countries.currency_symbol")}</TableHead>
+                <TableHead className="text-center">{t("admin.countries.flag")}</TableHead>
+                <TableHead className="text-center">{t("admin.countries.vat")}</TableHead>
+                <TableHead className="text-center">{t("admin.countries.status")}</TableHead>
+                <TableHead className="text-center">{t("common.actions")}</TableHead>
+              </TableRow>
+            </TableHeader>
 
-            <button
-              onClick={() => handleDelete(country.id)}
-              className="bg-red-500 text-white px-2 py-1 rounded"
-            >
-              {t("delete")}
-            </button>
-          </div>
-        ))}
+            <TableBody>
+              {countries.map((country: any) => (
+                <TableRow key={country.id}>
+                  <TableCell className="text-center">{country.name_ar}</TableCell>
+                  <TableCell className="text-center">{country.name_en}</TableCell>
+                  <TableCell className="text-center">{country.code}</TableCell>
+                  <TableCell className="text-center">{country.currency}</TableCell>
+                  <TableCell className="text-center">{country.currency_symbol}</TableCell>
+
+                  {/* Flag */}
+                  <TableCell className="text-center">
+                    {country.flag}
+                  </TableCell>
+
+                  {/* VAT */}
+                  <TableCell className="text-center">{country.vat}%</TableCell>
+
+                  {/* Status */}
+                  <TableCell className="text-center">
+                    <span
+                      className={`px-2 py-1 rounded text-xs text-center ${country.is_active
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-600"
+                        }`}
+                    >
+                      {country.is_active ? t("active") : t("inactive")}
+                    </span>
+                  </TableCell>
+
+                  {/* Actions */}
+                  <TableCell className="text-right space-x-2">
+                    <Button
+                      onClick={() => handleEdit(country)}
+                      variant="secondary"
+                    >
+                      {t("common.edit")}
+                    </Button>
+
+                    <Button
+                      onClick={() => handleDelete(country)}
+                      variant="destructive"
+                    >
+                      {t("common.delete")}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+
       </div>
-    </div>
+    </AdminLayout>
   );
 }

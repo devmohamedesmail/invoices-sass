@@ -93,6 +93,7 @@ export default function useCreateCompany(countries: Country[]) {
     country: z.string().optional(),
     vat_number: z.string().optional(),
     registration_number: z.string().optional(),
+    tax: z.string().optional(),
     logo: z
         .any()
         .optional()
@@ -131,6 +132,7 @@ type FormData = z.infer<typeof companySchema>;
             country: "",
             vat_number: "",
             registration_number: "",
+            tax: "",
             logo: undefined,
         },
     });
@@ -155,7 +157,7 @@ type FormData = z.infer<typeof companySchema>;
                 formData.append(key, value as any);
             }
         });
-console.log(formData)
+
         router.post("/companies/store", formData, {
             forceFormData: true,
         });

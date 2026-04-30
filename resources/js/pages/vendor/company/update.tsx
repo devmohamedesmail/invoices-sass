@@ -49,213 +49,186 @@ export default function UpdateCompany({ company, countries }: any) {
 
     return (
         <VendorLayout>
+<div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
 
+                <Card className="border-primary/20 shadow-lg bg-card overflow-hidden">
 
-            <div className=" mx-auto py-8 px-4">
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle>
-                            {t("company.update_profile")}
-                        </CardTitle>
-
-                        <CardDescription>
-                            {t("company.profile_description")}
-                        </CardDescription>
+                    {/* Header */}
+                    <CardHeader className="bg-primary/5 border-b border-primary/10 pb-6 px-6 sm:px-10 pt-8">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                            <div className="p-4 bg-primary/10 rounded-xl w-fit">
+                                <BuildingIcon className="w-8 h-8 text-primary" />
+                            </div>
+                            <div>
+                                <CardTitle className="text-2xl sm:text-3xl text-primary font-bold">
+                                    {t("company.update_profile")}
+                                </CardTitle>
+                                <CardDescription className="text-muted-foreground mt-1 text-base">
+                                    {t("company.profile_description")}
+                                </CardDescription>
+                            </div>
+                        </div>
                     </CardHeader>
 
-                    <CardContent>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                    <CardContent className="pt-8 px-6 sm:px-10 pb-10">
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
 
-                            {/* Name */}
-                            <div>
-                                <Label>{t("company.name")}</Label>
-                                <div className="relative">
-                                    <BuildingIcon className="absolute left-3 top-3 w-4 h-4" />
-                                    <Input
-                                        className="pl-10"
-                                        {...register("name")}
-
-                                    />
+                            {/* General Info */}
+                            <div className="space-y-6">
+                                <div className="border-b border-border pb-3">
+                                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                                        <BuildingIcon className="w-5 h-5 text-primary" />
+                                        {t("company.general_information")}
+                                    </h3>
                                 </div>
-                                <InputError message={errors.name?.message} />
-                            </div>
 
-                            {/* Email */}
-                            <div>
-                                <Label>{t("company.email")}</Label>
-                                <div className="relative">
-                                    <MailIcon className="absolute left-3 top-3 w-4 h-4" />
-                                    <Input
-                                        className="pl-10"
-                                        {...register("email")}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                                    />
-                                </div>
-                                <InputError message={errors.email?.message} />
-                            </div>
-
-                            {/* Phone */}
-                            <div>
-                                <Label>{t("company.phone")}</Label>
-                                <div className="relative">
-                                    <PhoneIcon className="absolute left-3 top-3 w-4 h-4" />
-                                    <Input
-                                        className="pl-10"
-                                        {...register("phone")}
-
-                                    />
-                                </div>
-                                <InputError message={errors.phone?.message} />
-                            </div>
-
-
-                            <div className="space-y-2.5">
-                                <Label htmlFor="vat_number" className="text-foreground">
-                                    {t("company.vat_number")}
-                                </Label>
-                                <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                                        <BuildingIcon className="h-4 w-4 text-muted-foreground/70" />
+                                    {/* Name */}
+                                    <div className="space-y-2.5">
+                                        <Label>{t("company.name")}</Label>
+                                        <div className="relative">
+                                            <BuildingIcon className="absolute left-3 top-3 w-4 h-4" />
+                                            <Input className="pl-10 h-11" {...register("name")} />
+                                        </div>
+                                        <InputError message={errors.name?.message} />
                                     </div>
-                                    <Input
-                                        id="vat_number"
-                                        type="text"
-                                        className="pl-10 h-11"
-                                        placeholder="123456789"
-                                        {...register("vat_number")}
 
-                                    />
-                                </div>
-                                <InputError message={errors.vat_number?.message} />
-                            </div>
-
-                            <div className="space-y-2.5">
-                                <Label htmlFor="registration_number" className="text-foreground">
-                                    {t("company.registration_number")}
-                                </Label>
-                                <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                                        <BuildingIcon className="h-4 w-4 text-muted-foreground/70" />
+                                    {/* Email */}
+                                    <div className="space-y-2.5">
+                                        <Label>{t("company.email")}</Label>
+                                        <div className="relative">
+                                            <MailIcon className="absolute left-3 top-3 w-4 h-4" />
+                                            <Input className="pl-10 h-11" {...register("email")} />
+                                        </div>
+                                        <InputError message={errors.email?.message} />
                                     </div>
-                                    <Input
-                                        id="registration_number"
-                                        type="text"
-                                        className="pl-10 h-11"
-                                        placeholder="123456789"
-                                        {...register("registration_number")}
 
-                                    />
-                                </div>
-                                <InputError message={errors.registration_number?.message} />
-                            </div>
+                                    {/* Phone */}
+                                    <div className="space-y-2.5">
+                                        <Label>{t("company.phone")}</Label>
+                                        <div className="relative">
+                                            <PhoneIcon className="absolute left-3 top-3 w-4 h-4" />
+                                            <Input className="pl-10 h-11" {...register("phone")} />
+                                        </div>
+                                        <InputError message={errors.phone?.message} />
+                                    </div>
 
-                            {/* Address */}
-                            <div>
-                                <Label>{t("company.address")}</Label>
-                                <div className="relative">
-                                    <MapPinIcon className="absolute left-3 top-3 w-4 h-4" />
-                                    <Input
-                                        className="pl-10"
-                                        {...register("address")}
+                                    {/* Logo */}
+                                    <div className="space-y-2.5">
+                                        <Label>{t("company.logo")}</Label>
 
-                                    />
-                                </div>
-                                <InputError message={errors.address?.message} />
-                            </div>
-
-                            {/* Logo */}
-
-                            <img src={company?.logo} alt={company.name} className="w-20 h-20" />
-                            <ImagePicker
-                                label={t("company.logo")}
-                                id="logo"
-                                onChange={(file) => setValue("logo", file, { shouldValidate: true })}
-                                error={errors.logo?.message as string}
-                            />
-                            <InputError message={errors.logo?.message as string} />
-                            {/* <div>
-                                
-                                <Label>{t("company.logo")}</Label>
-                                <Input
-                                    type="file"
-                                    onChange={(e) =>
-                                        setData(
-                                            'logo',
-                                            e.target.files?.[0] || null
-                                        )
-                                    }
-                                />
-                            </div> */}
-
-                            {/* Country */}
-                            <div>
-                                {/* <Label>{t("company.country")}</Label>
-
-                                <Select
-                                    value={data.country_id}
-                                    onValueChange={handleCountryChange}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue />
-                                    </SelectTrigger>
-
-                                    <SelectContent>
-                                        {countries.map((c: any) => (
-                                            <SelectItem
-                                                key={c.id}
-                                                value={c.id.toString()}
-                                            >
-                                                {c.name_ar}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select> */}
-
-
-
-                                <Controller
-                                        name="country_id"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <Select
-                                                onValueChange={(value) => {
-                                                    field.onChange(value);
-                                                    handleCountryChange(value);
-                                                }}
-                                                value={field.value}
-                                            >
-                                                <SelectTrigger className="w-full h-11">
-                                                    <SelectValue placeholder={t("company.select_country")} />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {countries?.map((country: any) => (
-                                                        <SelectItem key={country.id} value={country.id.toString()}>
-                                                            {country.name_ar}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
+                                        {/* Current Logo */}
+                                        {company?.logo && (
+                                            <img
+                                                src={company.logo}
+                                                alt="logo"
+                                                className="w-20 h-20 rounded-md mb-2"
+                                            />
                                         )}
-                                    />
 
-                                    <InputError message={errors.country_id?.message} />
+                                        <ImagePicker
+                                            label={t("company.logo")}
+                                            id="logo"
+                                            onChange={(file) =>
+                                                setValue("logo", file, { shouldValidate: true })
+                                            }
+                                            error={errors.logo?.message as string}
+                                        />
+                                        <InputError message={errors.logo?.message as string} />
+                                    </div>
+
+                                    {/* VAT */}
+                                    <div className="space-y-2.5">
+                                        <Label>{t("company.vat_number")}</Label>
+                                        <Input className="h-11" {...register("vat_number")} />
+                                        <InputError message={errors.vat_number?.message} />
+                                    </div>
+
+                                    {/* Tax */}
+                                    <div className="space-y-2.5">
+                                        <Label>{t("company.tax")}</Label>
+                                        <Input className="h-11" {...register("tax")} />
+                                        <InputError message={errors.tax?.message} />
+                                    </div>
+
+                                    {/* Registration */}
+                                    <div className="space-y-2.5">
+                                        <Label>{t("company.registration_number")}</Label>
+                                        <Input className="h-11" {...register("registration_number")} />
+                                        <InputError message={errors.registration_number?.message} />
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            {/* Location */}
+                            <div className="space-y-6">
+                                <div className="border-b pb-3">
+                                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                                        <MapPinIcon className="w-5 h-5 text-primary" />
+                                        {t("company.location_details")}
+                                    </h3>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                                    {/* Address */}
+                                    <div className="md:col-span-2 space-y-2.5">
+                                        <Label>{t("company.address")}</Label>
+                                        <div className="relative">
+                                            <MapPinIcon className="absolute left-3 top-3 w-4 h-4" />
+                                            <Input className="pl-10 h-11" {...register("address")} />
+                                        </div>
+                                        <InputError message={errors.address?.message} />
+                                    </div>
+
+                                    {/* Country */}
+                                    <div className="space-y-2.5">
+                                        <Label>{t("company.country")}</Label>
+                                        <Controller
+                                            name="country_id"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <Select
+                                                    onValueChange={(value) => {
+                                                        field.onChange(value);
+                                                        handleCountryChange(value);
+                                                    }}
+                                                    value={field.value}
+                                                >
+                                                    <SelectTrigger className="h-11">
+                                                        <SelectValue placeholder={t("company.select_country")} />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {countries?.map((c: any) => (
+                                                            <SelectItem key={c.id} value={c.id.toString()}>
+                                                                {c.name_ar}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            )}
+                                        />
+                                        <InputError message={errors.country_id?.message} />
+                                    </div>
+
+                                </div>
                             </div>
 
                             {/* Submit */}
-                            <div className="flex justify-end">
-                                <Button disabled={isSubmitting}>
-                                    {isSubmitting
-                                        ? t('common.saving')
-                                        : t('common.update')}
+                            <div className="flex justify-end pt-6 border-t">
+                                <Button disabled={isSubmitting} size="lg">
+                                    {isSubmitting ? t('common.saving') : t('common.update')}
                                 </Button>
                             </div>
 
                         </form>
                     </CardContent>
                 </Card>
-
             </div>
+
+           
         </VendorLayout>
     );
 }

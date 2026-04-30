@@ -10,7 +10,7 @@ export default function Show({ invoice }: { invoice: any }) {
 
   return (
     <VendorLayout title={`Invoice ${invoice.invoice_number}`}>
-      <InvoicePaper invoice={invoice} />
+   
       <div className="max-w-9xl mx-auto space-y-6 pb-16">
 
         {/* 🔥 Header */}
@@ -71,11 +71,11 @@ export default function Show({ invoice }: { invoice: any }) {
             <table className="w-full text-sm">
               <thead className="bg-neutral-50 dark:bg-neutral-800 text-neutral-500 text-xs uppercase">
                 <tr>
-                  <th className="px-4 py-3 text-left">{t('invoices.service')}</th>
-                  <th className="px-4 py-3 text-left">{t('invoices.description')}</th>
-                  <th className="px-4 py-3 text-right">{t('invoices.qty')}</th>
-                  <th className="px-4 py-3 text-right">{t('invoices.price')}</th>
-                  <th className="px-4 py-3 text-right">{t('invoices.total')}</th>
+                  <th className="px-4 py-3 text-center">{t('invoices.service')}</th>
+                  <th className="px-4 py-3 text-center">{t('invoices.description')}</th>
+                  <th className="px-4 py-3 text-center">{t('invoices.qty')}</th>
+                  <th className="px-4 py-3 text-center">{t('invoices.price')}</th>
+                  <th className="px-4 py-3 text-center">{t('invoices.total')}</th>
                 </tr>
               </thead>
 
@@ -84,9 +84,9 @@ export default function Show({ invoice }: { invoice: any }) {
                   <tr key={s.id} className="border-t">
                     <td className="px-4 py-3">{s.name}</td>
                     <td className="px-4 py-3 text-neutral-500">{s.description}</td>
-                    <td className="px-4 py-3 text-right">{s.quantity}</td>
-                    <td className="px-4 py-3 text-right">{Number(s.unit_price).toFixed(2)}</td>
-                    <td className="px-4 py-3 text-right font-medium">
+                    <td className="px-4 py-3 text-center">{s.quantity}</td>
+                    <td className="px-4 py-3 text-center">{Number(s.unit_price).toFixed(2)}</td>
+                    <td className="px-4 py-3 text-center font-medium">
                       {Number(s.total_price).toFixed(2)}
                     </td>
                   </tr>

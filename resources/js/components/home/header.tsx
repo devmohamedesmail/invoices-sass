@@ -10,27 +10,29 @@ import { FileText } from 'lucide-react';
 export default function Header() {
     const { t, i18n } = useTranslation();
     const { auth, company } = usePage<SharedData>().props;
-    const isRtl = i18n.language === 'ar';
+    const { settings }:any = usePage().props
+
+    console.log(auth)
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4 sm:px-8">
                 <div className="flex items-center gap-3">
-                    {company?.logo ? (
-                        <img src={company.logo} alt={company?.name} className="h-8 w-8 rounded object-cover shadow-sm" />
+                    {settings?.app_logo ? (
+                        <img src={settings.app_logo} alt={settings?.app_name} className="h-8 w-8 rounded object-cover shadow-sm" />
                     ) : (
                         <div className="h-8 w-8 bg-primary rounded flex items-center justify-center shadow-sm">
                             <FileText className="h-5 w-5 text-primary-foreground" />
                         </div>
                     )}
-                    <span className="font-bold text-lg hidden sm:inline-block tracking-tight">{company?.name || 'Invoicer'}</span>
+                    <span className="font-bold text-lg hidden sm:inline-block tracking-tight">{i18n.language === 'ar' ? settings?.app_name_ar : settings?.app_name_en}</span>
                 </div>
                 
-                <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+                {/* <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
                     <a href="#features" className="transition-colors hover:text-primary text-muted-foreground">{t('home.footer.features')}</a>
                     <a href="#" className="transition-colors hover:text-primary text-muted-foreground">{t('home.footer.pricing')}</a>
                     <a href="#" className="transition-colors hover:text-primary text-muted-foreground">{t('home.footer.about')}</a>
-                </nav>
+                </nav> */}
 
                 <div className="flex items-center gap-3 relative">
                     <div className="flex items-center gap-2 me-2 border-e pe-4 border-border/40">
@@ -38,19 +40,14 @@ export default function Header() {
                         <ThemeToggle />
                     </div>
                     {auth.user ? (
-                        <div className="flex items-center gap-4">
-                            <Link href="/dashboard" className="text-sm font-semibold hover:text-primary transition-colors hidden sm:block">
-                                {t('home.hero.dashboard')}
-                            </Link>
-                            <UserMenu />
-                        </div>
+                        <UserMenu />
                     ) : (
                         <div className="flex items-center gap-2">
                             <Link href="/login" className="text-sm font-semibold px-4 py-2 hover:text-primary transition-colors hidden sm:block">
                                 {t('auth.login')}
                             </Link>
-                            <Link href="/register" className="text-sm font-semibold bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 flex items-center shadow-sm transition-all focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background">
-                                {t('home.hero.get_started')}
+                            <Link href="/register" className="text-sm font-semibold px-4 py-2 bg-primary text-white hover:text-primary transition-colors hidden sm:block">
+                                {t('auth.register_account')}
                             </Link>
                         </div>
                     )}

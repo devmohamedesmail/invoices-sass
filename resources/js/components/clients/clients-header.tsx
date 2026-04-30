@@ -16,7 +16,7 @@ export default function ClientsHeader({ handleOpenCreate }: any) {
                 </h1>
                 <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-0.5">{company?.name}</p>
             </div>
-            <Button onClick={handleOpenCreate} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white">
+            <Button onClick={handleOpenCreate}>
                 <PlusCircle size={16} />
                 {t('common.create')} {t('invoices.client')}
             </Button>

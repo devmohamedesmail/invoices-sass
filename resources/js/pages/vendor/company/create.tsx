@@ -135,29 +135,7 @@ export default function CreateCompany({ countries }: Props) {
                                         error={errors.logo?.message as string}
                                     />
                                     <InputError message={errors.logo?.message as string} />
-                                    {/* <div className="space-y-2.5 flex flex-col justify-start">
-                                        <Label htmlFor="logo" className="text-foreground">
-                                            {t("company.logo")}
-                                        </Label>
-
-                                        <div className="relative">
-                                            <Input
-                                                id="logo"
-                                                type="file"
-                                                accept="image/*"
-                                                {...register("logo")}
-                                                onChange={(e) => {
-                                                    const file = e.target.files?.[0];
-                                                    setValue("logo", file, { shouldValidate: true });
-                                                }}
-                                                className="h-11 file:mr-4 file:py-1 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer pt-2"
-                                            />
-
-                                            <ImagePlusIcon className="absolute right-3 top-3 h-5 w-5 text-muted-foreground/50 pointer-events-none" />
-                                        </div>
-
-                                        <InputError message={errors.logo?.message as string} />
-                                    </div> */}
+                                    
 
 
 
@@ -179,6 +157,27 @@ export default function CreateCompany({ countries }: Props) {
                                             />
                                         </div>
                                         <InputError message={errors.vat_number?.message} />
+                                    </div>
+
+
+                                    <div className="space-y-2.5">
+                                        <Label htmlFor="tax" className="text-foreground">
+                                            {t("company.tax")}
+                                        </Label>
+                                        <div className="relative">
+                                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                                <BuildingIcon className="h-4 w-4 text-muted-foreground/70" />
+                                            </div>
+                                            <Input
+                                                id="tax"
+                                                type="text"
+                                                className="pl-10 h-11"
+                                                placeholder="10%"
+                                                {...register("tax")}
+
+                                            />
+                                        </div>
+                                        <InputError message={errors.tax?.message} />
                                     </div>
 
                                     <div className="space-y-2.5">

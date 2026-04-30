@@ -18,7 +18,6 @@ export default function ClientsTable({ clients, handleEdit, handleDelete }: any)
 
     return (
         <div>
-
             <div>
                 <div className="rounded-xl border overflow-hidden">
                     <Table>

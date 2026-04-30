@@ -53,12 +53,6 @@ export default function VendorSidebar({ isCollapsed, isMobileOpen, onClose }: Si
             // active: route().current('invoices-types.*') ?? false 
         },
         { 
-            name: t('vendor.sidebar.team'), 
-            href: '#', 
-            icon: Users, 
-            active: false 
-        },
-        { 
             name: t('vendor.sidebar.settings'), 
             href: '/companies/edit/page', 
             icon: Settings, 

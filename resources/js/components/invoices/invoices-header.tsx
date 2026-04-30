@@ -17,7 +17,7 @@ export default function InvoicesHeader() {
           </div>
           <Button
             onClick={() => router.visit('/invoices/create')}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+            
           >
             <PlusCircle size={16} />
             {t('invoices.new_invoice')}

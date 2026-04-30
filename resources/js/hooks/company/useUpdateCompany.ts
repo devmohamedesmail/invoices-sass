@@ -30,6 +30,7 @@ export default function useUpdateCompany(
         country: z.string().optional(),
         vat_number: z.string().optional(),
         registration_number: z.string().optional(),
+        tax: z.string().optional(),
         logo: z
             .any()
             .optional()
@@ -70,6 +71,7 @@ export default function useUpdateCompany(
             vat_number: company?.vat_number || "",
             registration_number: company?.registration_number || "",
             logo: undefined,
+            tax: company?.tax?.toString() || "",
         },
     });
 

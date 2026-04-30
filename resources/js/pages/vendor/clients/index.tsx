@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
-import { router, usePage } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import VendorLayout from '@/layouts/vendor/vendor-layout';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Users, PlusCircle, Trash2, Edit2, Phone, Mail, MapPin } from 'lucide-react';
 import { Client } from '@/types/vendor';
 import ClientsTable from '@/components/clients/clients-table';
 import ClientsHeader from '@/components/clients/clients-header';
@@ -16,6 +11,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ClientDialog from '@/components/clients/client-dialog';
 import ClientDeleteDialog from '@/components/clients/client-delete-dialog';
+import NoClientsFound from '@/components/clients/no-clients-found';
+import NoClient from '@/components/clients/no-client';
 
 
 
@@ -89,7 +86,7 @@ export default function ClientsIndex({ clients, filters }: Props) {
     setIsModalOpen(true);
   };
 
- 
+
 
   const handleOpenEdit = (client: Client) => {
     setEditingClient(client);
@@ -142,16 +139,16 @@ export default function ClientsIndex({ clients, filters }: Props) {
         />
 
 
-
-        <ClientsTable
+        {clients.data.length === 0 ? (<NoClient />) : (<ClientsTable
           clients={clients}
           handleEdit={handleOpenEdit}
           handleDelete={handleOpenDelete}
-        />
+        />)}
+
 
       </div>
 
-   
+
 
       <ClientDialog
         isModalOpen={isModalOpen}

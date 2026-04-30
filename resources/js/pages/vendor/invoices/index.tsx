@@ -96,11 +96,16 @@ export default function InvoicesIndex({ invoices, filters }: Props) {
         <InvoicesSearch search={search} setSearch={setSearch} />
 
 
-        <InvoicesStat invoices={invoices} />
+        <InvoicesStat
+          invoices={invoices} />
 
-         <InvoicesTable invoices={invoices} handleDelete={handleDelete} paymentBadge={paymentBadge} balanceClass={balanceClass} />
-     
-       
+        <InvoicesTable
+          invoices={invoices}
+          handleDelete={handleDelete}
+          paymentBadge={paymentBadge}
+          balanceClass={balanceClass} />
+
+
 
         {/* ── Pagination ── */}
         {invoices.last_page > 1 && (

@@ -27,6 +27,7 @@
   },
   "auth": {
     "register": "تسجيل",
+    "register_account":"إنشاء حساب",
     "name": "الاسم",
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
@@ -38,7 +39,9 @@
     "remember_me": "تذكرني",
     "dont_have_account": "ليس لديك حساب؟",
     "sign_up": "تسجيل",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "welcome_back": "مرحباً",
+    "welcome_back_description": "للحفاظ على نجاح عملك، نحتاج إلى تأكيد هويتك. يرجى إدخال التفاصيل الخاصة بك للمتابعة."
   },
   "dashboard": {
     "dashboard": "لوحة التحكم",
@@ -46,21 +49,6 @@
     "clients": "العملاء",
     "invoices": "الفواتير",
     "todayInvoices": "فواتير اليوم"
-  },
-  "countries": {
-    "add_country": "إضافة دولة",
-    "edit_country": "تعديل دولة",
-    "name_ar": "الاسم بالعربية",
-    "name_en": "الاسم بالإنجليزية",
-    "code": "الكود",
-    "currency": "العملة",
-    "currency_symbol": "رمز العملة",
-    "flag": "العلم",
-    "vat": "الضريبة",
-    "active": "نشط",
-    "save": "حفظ",
-    "edit": "تعديل",
-    "delete": "حذف"
   },
   "vendor": {
     "sidebar": {
@@ -72,6 +60,14 @@
       "invoices-types": "أنواع الفواتير",
       "clients": "العملاء",
       "new_invoice": "فاتورة جديدة"
+    },
+    "account": {
+      "title": "إعدادات الملف الشخصي",
+      "profile_information": "معلومات الملف الشخصي",
+      "profile_information_description": "تحديث الاسم وعنوان البريد الإلكتروني",
+      "delete_account": "حذف الحساب",
+      "warning": "تحذير",
+      "delete_account_description": "عند حذف حسابك، سيتم حذف جميع موارده وبياناته بشكل نهائي. يرجى إدخال كلمة المرور الخاصة بك لتأكيد رغبتك في حذف حسابك بشكل نهائي."
     }
   },
   "validation": {
@@ -107,7 +103,8 @@
     "country_required": "الدولة مطلوبة",
     "file_invalid": "ملف غير صالح",
     "file_size_invalid": "حجم الملف يجب أن يكون أقل من 2 ميجابايت",
-    "file_type_invalid": "نوع الملف يجب أن يكون صورة"
+    "file_type_invalid": "نوع الملف يجب أن يكون صورة",
+    "tax": "Tax (%)"
   },
   "invoices": {
     "invoices": "الفواتير",
@@ -202,19 +199,22 @@
     "paid": "مدفوع",
     "thank_you_for_your_business": "شكراً لتعاملكم معنا",
     "terms_and_conditions": "الشروط والأحكام",
-    "validation":{
+    "preview-invoice":"معاينة الفاتورة",
+    "price":"السعر",
+    "qty":"الكمية",
+    "validation": {
       "required": "هذا الحقل مطلوب",
       "min": "يجب أن تكون القيمة أكبر من أو تساوي الحد الأدنى",
       "required_service": "يجب إضافة خدمة واحدة على الأقل"
     }
-    
   },
   "home": {
     "hero": {
       "title": "فواتير احترافية بكل سهولة",
       "subtitle": "قم بإنشاء وتتبع وإدارة فواتيرك بسهولة. دعم لعملات ولغات متعددة وإدارة سلسة للعملاء.",
       "get_started": "ابدأ مجانًا",
-      "dashboard": "الذهاب للوحة التحكم"
+      "dashboard": "الذهاب للوحة التحكم",
+      "learn_more": "اعرف المزيد"
     },
     "features": {
       "title": "كل ما تحتاجه لإدارة أعمالك",
@@ -264,32 +264,46 @@
       "title": "إعدادات التطبيق",
       "general_info": "المعلومات العامة",
       "general_desc": "تحديث المعلومات الأساسية للتطبيق",
-
       "app_name_ar": "اسم التطبيق (عربي)",
       "app_name_en": "اسم التطبيق (إنجليزي)",
-
       "copy_right_ar": "حقوق النشر (عربي)",
       "copy_right_en": "حقوق النشر (إنجليزي)",
-
       "phone": "رقم الهاتف",
       "whatsapp": "واتساب",
-
       "descriptions": "الوصف ومن نحن",
       "descriptions_desc": "نصوص تفصيلية عن التطبيق",
-
       "description_ar": "الوصف (عربي)",
       "description_en": "الوصف (إنجليزي)",
-
       "about_ar": "من نحن (عربي)",
       "about_en": "من نحن (إنجليزي)",
-
       "images": "الشعارات والأيقونات",
       "images_desc": "تحديث الهوية البصرية للتطبيق",
-
       "app_logo": "شعار التطبيق (فاتح)",
       "app_logo_black": "شعار التطبيق (داكن)",
       "app_favicon": "أيقونة الموقع (فاتح)",
       "app_favicon_white": "أيقونة الموقع (داكن)"
+    },
+    "countries": {
+      "add_country": "إضافة دولة",
+      "edit_country": "تعديل دولة",
+      "name_ar": "الاسم بالعربية",
+      "name_en": "الاسم بالإنجليزية",
+      "code": "الكود",
+      "status": " الحالة ",
+      "currency": "العملة",
+      "currency_symbol": "رمز العملة",
+      "flag": "العلم",
+      "vat": "الضريبة",
+      "active": "نشط",
+      "save": "حفظ",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "delete_country_message": "هل أنت متأكد من حذف هذه الدولة؟",
+      "delete_country_title": "حذف الدولة"
     }
+  },
+  "clients": {
+    "no_clients": "لا يوجد عملاء",
+    "add_first_client": "أضف أول عميل لك للبدء"
   }
 }
