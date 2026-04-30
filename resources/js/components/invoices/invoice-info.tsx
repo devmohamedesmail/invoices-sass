@@ -29,7 +29,7 @@ export default function InvoiceInfo({ control, errors, clients, invoice_types, i
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                 {/* Client Select using UI */}
-                <div className="flex flex-col gap-1.5 col-span-1">
+                {/* <div className="flex flex-col gap-1.5 col-span-1">
                     <Label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center justify-between">
                         {t('invoices.client')}
                         <button type="button" onClick={() => setClientModalOpen(true)} className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
@@ -54,7 +54,23 @@ export default function InvoiceInfo({ control, errors, clients, invoice_types, i
                     />
 
                     {errors.client_id?.message && <InputError message={errors.client_id.message as string} />}
+                </div> */}
+
+ <div className="flex flex-col gap-1.5 col-span-1">
+                    <div>
+                        <Label>{t('invoices.client_name')}</Label>
+                        <Input {...register('client_name')} />
+                        {errors.client_name?.message && <InputError message={errors.client_name.message as string} />}
+                    </div>
+                    <div>
+                        <Label>{t('invoices.client_phone')}</Label>
+                        <Input {...register('client_phone')} />
+                        {errors.client_phone?.message && <InputError message={errors.client_phone.message as string} />}
+                    </div>
                 </div>
+
+
+
 
                 {/* Invoice Type using UI */}
                 <div className="flex flex-col gap-1.5 col-span-1">

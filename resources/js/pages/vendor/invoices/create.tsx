@@ -14,10 +14,11 @@ import InvoiceSummery from '@/components/invoices/invoice-summery';
 import InvoiceNotes from '@/components/invoices/invoice-notes';
 import CreateClientDialog from '@/components/invoices/create-client-dialog';
 import CreateInvoiceHeader from '@/components/invoices/create-invoice-header';
+import { Client, InvoiceType } from '@/types/vendor';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { toast } from 'sonner';
 
-/* ─────────────────────── Types ─────────────────────── */
-interface Client { id: number; name: string; email?: string; phone?: string; }
-interface InvoiceType { id: number; name_ar: string; name_en: string; }
+
 
 interface Props {
     clients: Client[];
@@ -33,6 +34,11 @@ interface Props {
 export default function CreateInvoice({ clients, invoice_types, next_invoice_number }: Props) {
     const { t, i18n } = useTranslation();
     const isRTL = i18n.dir() === 'rtl';
+    const [successModal, setSuccessModal] = useState(false);
+    const { props } = usePage();
+     const successInvoice = props.successInvoice as any;
+
+     console.log(successInvoice);
 
 
     /* ─────────────────────── Zod Schema (Inside for t()) ────────────────── */
@@ -45,13 +51,20 @@ export default function CreateInvoice({ clients, invoice_types, next_invoice_num
         });
 
         const toNumber = (val: any) =>
-    val === '' || val === null || val === undefined ? undefined : Number(val);
+            val === '' || val === null || val === undefined ? undefined : Number(val);
         return z.object({
             // client_id: z.coerce.number().min(1, t('validation.required', { defaultValue: 'Client is required' })),
-             client_id: z.preprocess(toNumber, z.number().min(1)),
-            invoice_type_id: z.coerce.number().min(1, t('validation.required', { defaultValue: 'Invoice type is required' })),
+            // client_id: z.preprocess(toNumber, z.number().min(1)),
+            client_name: z.string().min(1, t('validation.required')),
+            client_phone: z.string().min(1, t('validation.required')),
+            // invoice_type_id: z.coerce.number().min(1, t('validation.required', { defaultValue: 'Invoice type is required' })),
+            invoice_type_id: z.coerce.number().min(1, t('validation.required')),
+            // invoice_type_id: z.string().min(1, t('validation.required')),
             invoice_number: z.string().min(1, t('validation.required', { defaultValue: 'Invoice number is required' })),
-            payment_type: z.string().min(1, t('validation.required', { defaultValue: 'Payment type is required' })),
+            // payment_type: z.string().min(1, t('validation.required', { defaultValue: 'Payment type is required' })),
+            payment_type: z.enum(['cash', 'card', 'bank', 'check'], {
+                message: t('validation.required'),
+            }),
             invoice_date: z.string().min(1, t('validation.required', { defaultValue: 'Invoice date is required' })),
             due_date: z.string().min(1, t('validation.required', { defaultValue: 'Due date is required' })),
             car_no: z.string().optional(),
@@ -85,7 +98,11 @@ export default function CreateInvoice({ clients, invoice_types, next_invoice_num
     } = useForm<FormData>({
         resolver: zodResolver(schema) as any,
         defaultValues: {
-            client_id: 0,
+            // client_id: 0,
+            client_name: '',
+            client_phone: '',
+            invoice_type_id: 0,
+            payment_type: 'cash',
             invoice_number: next_invoice_number || '', /* Auto-generated number */
             tax: 0,
             paid_amount: 0,
@@ -112,16 +129,25 @@ export default function CreateInvoice({ clients, invoice_types, next_invoice_num
 
     /* ── Submit ── */
     const onSubmit = (data: FormData) => {
-        router.post('/invoices', data as any, { preserveScroll: true });
+        router.post('/invoices', data as any, {
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.success(t('invoices.invoice_created'));
+                router.visit('/invoices');
+            },
+            onError: () => {
+                toast.error(t('invoices.invoice_created_error'));
+            }
+        });
     };
 
-   
+
     return (
         <VendorLayout title={t('invoices.create_invoice')}>
             <div className=" mx-auto pb-16">
 
                 {/* ── Page header ── */}
-               <CreateInvoiceHeader />
+                <CreateInvoiceHeader />
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 
@@ -184,8 +210,23 @@ export default function CreateInvoice({ clients, invoice_types, next_invoice_num
                 </form>
             </div>
 
-       
-            {/* <CreateClientDialog isClientModalOpen={isClientModalOpen} setClientModalOpen={setClientModalOpen} /> */}
+
+            {/* <Dialog open={successModal} onOpenChange={setSuccessModal}>
+                <DialogContent className="sm:max-w-106.25">
+                    <DialogHeader>
+                        <DialogTitle className='text-center py-4'>{t('invoices.invoice_created')}</DialogTitle>
+                    </DialogHeader>
+
+
+                    <DialogFooter className="sm:justify-center">
+                       
+                        <Button type="button" variant="outline" onClick={() => router.visit('/invoices')}>
+                            {t('common.close')}
+                        </Button>
+                    </DialogFooter>
+
+                </DialogContent>
+            </Dialog> */}
         </VendorLayout>
     );
 }
