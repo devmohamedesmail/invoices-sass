@@ -4,52 +4,10 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { router } from '@inertiajs/react';
 import InputError from '../input-error';
 
 export default function ClientDialog({ isModalOpen, setIsModalOpen, editingClient, handleSubmit, register, errors, reset, isSubmitting, onSubmit }: any) {
     const { t } = useTranslation();
-
-
-    // const clientSchema = z.object({
-    //     name: z.string().min(2, 'Name is required'),
-    //     email: z.string().email().optional().or(z.literal('')),
-    //     phone: z.string().optional(),
-    //     address: z.string().optional(),
-    //     city: z.string().optional(),
-    //     state: z.string().optional(),
-    //     country: z.string().optional(),
-    // });
-    // type ClientFormData = z.infer<typeof clientSchema>;
-
-
-    // const {
-    //     register,
-    //     handleSubmit,
-    //     reset,
-    //     formState: { errors, isSubmitting },
-    // } = useForm<ClientFormData>({
-    //     resolver: zodResolver(clientSchema),
-    // });
-
-
-    // const onSubmit = (data: ClientFormData) => {
-    //     if (editingClient) {
-    //         router.put(`/clients/${editingClient.id}`, data, {
-    //             preserveScroll: true,
-    //             onSuccess: () => setIsModalOpen(false),
-    //         });
-    //     } else {
-    //         router.post('/clients', data, {
-    //             preserveScroll: true,
-    //             onSuccess: () => setIsModalOpen(false),
-    //         });
-    //     }
-    // };
-
     return (
        <>
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>

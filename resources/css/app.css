@@ -160,3 +160,10 @@
   font-weight: 400;
   font-style: normal;
 }
+
+.invoice-font{
+    font-family: "Noto Sans Arabic", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}

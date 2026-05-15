@@ -3,10 +3,12 @@ namespace App\Http\Controllers\vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
+use App\Models\CompanyTerm;
 use App\Models\Invoice;
 use App\Models\InvoiceService;
 use App\Models\InvoiceType;
 use App\Traits\HasCompany;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Foundation\Exceptions\Renderer\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,17 +19,20 @@ class InvoiceController extends Controller
 {
     use HasCompany;
 
+
     public function index(Request $request)
     {
         try {
-            $company  = $this->getCompany();
-            $invoices = Invoice::with(['client', 'invoiceType', 'services', 'company'])
+            $company = $this->getCompany();
+
+            $invoices = Invoice::with(['client', 'invoiceType'])
                 ->where('company_id', $company->id)
-                ->when($request->search, function ($q, $search) {
-                    $q->where(function ($inner) use ($search) {
-                        $inner->where('invoice_number', 'like', "%{$search}%")
-                            ->orWhereHas('client', fn($c) => $c->where('name', 'like', "%{$search}%"));
-                    });
+                ->when($request->search, function ($q) use ($request) {
+                    $q->where('invoice_number', 'like', "%{$request->search}%")
+                        ->orWhereHas('client', function ($c) use ($request) {
+                            $c->where('name', 'like', "%{$request->search}%")
+                                ->orWhere('phone', 'like', "%{$request->search}%");
+                        });
                 })
                 ->latest()
                 ->paginate(10)
@@ -37,7 +42,8 @@ class InvoiceController extends Controller
                 'invoices' => $invoices,
                 'filters'  => $request->only('search'),
             ]);
-        } catch (Exception $e) {
+
+        } catch (\Exception $e) {
             return Inertia::render('vendor/errors/errors', [
                 'error' => $e->getMessage(),
             ]);
@@ -144,7 +150,7 @@ class InvoiceController extends Controller
         //         ]);
         //     }
         // });
-$invoice = null;
+        $invoice = null;
         DB::transaction(function () use ($validated, $company) {
 
             // ✅ 1. create client
@@ -210,12 +216,16 @@ $invoice = null;
         abort_unless($invoice->company_id === $company->id, 403);
 
         $validated = $request->validate([
-            'client_id'              => 'required|exists:clients,id',
+            // ❌ حذف client_id
+            'client_name'            => 'required|string|max:255',
+            'client_phone'           => 'required|string|max:50',
+
             'invoice_type_id'        => 'required|exists:invoice_types,id',
             'invoice_number'         => 'required|string|max:100',
             'payment_type'           => 'required|string|max:100',
             'invoice_date'           => 'required|date',
             'due_date'               => 'required|date',
+
             'car_no'                 => 'nullable|string|max:50',
             'car_type'               => 'nullable|string|max:100',
             'car_model'              => 'nullable|string|max:100',
@@ -227,10 +237,13 @@ $invoice = null;
             'car_engine'             => 'nullable|string|max:100',
             'car_transmission'       => 'nullable|string|max:100',
             'car_fuel'               => 'nullable|string|max:50',
+
             'tax'                    => 'required|numeric|min:0',
             'paid_amount'            => 'required|numeric|min:0',
+
             'notes'                  => 'nullable|string',
             'terms'                  => 'nullable|string',
+
             'services'               => 'required|array|min:1',
             'services.*.name'        => 'required|string|max:255',
             'services.*.description' => 'nullable|string',
@@ -239,19 +252,30 @@ $invoice = null;
         ]);
 
         DB::transaction(function () use ($validated, $invoice) {
+
+            // ✅ 1. تحديث العميل المرتبط بالفاتورة
+            if ($invoice->client) {
+                $invoice->client->update([
+                    'name'  => $validated['client_name'],
+                    'phone' => $validated['client_phone'],
+                ]);
+            }
+
+            // ✅ 2. حساب الإجمالي
             $subtotal = collect($validated['services'])
                 ->sum(fn($s) => $s['unit_price'] * $s['quantity']);
 
             $tax   = $validated['tax'];
             $total = $subtotal + ($subtotal * $tax / 100);
 
+            // ✅ 3. تحديث الفاتورة (بدون client_id)
             $invoice->update([
-                'client_id'        => $validated['client_id'],
                 'invoice_type_id'  => $validated['invoice_type_id'],
                 'invoice_number'   => $validated['invoice_number'],
                 'payment_type'     => $validated['payment_type'],
                 'invoice_date'     => $validated['invoice_date'],
                 'due_date'         => $validated['due_date'],
+
                 'car_no'           => $validated['car_no'] ?? null,
                 'car_type'         => $validated['car_type'] ?? null,
                 'car_model'        => $validated['car_model'] ?? null,
@@ -263,17 +287,21 @@ $invoice = null;
                 'car_engine'       => $validated['car_engine'] ?? null,
                 'car_transmission' => $validated['car_transmission'] ?? null,
                 'car_fuel'         => $validated['car_fuel'] ?? null,
+
                 'subtotal'         => $subtotal,
                 'tax'              => $tax,
                 'total'            => $total,
                 'paid_amount'      => $validated['paid_amount'],
                 'balance'          => $total - $validated['paid_amount'],
+
                 'notes'            => $validated['notes'] ?? null,
                 'terms'            => $validated['terms'] ?? null,
             ]);
 
+            // ✅ 4. حذف الخدمات القديمة
             $invoice->services()->delete();
 
+            // ✅ 5. إعادة إنشاء الخدمات
             foreach ($validated['services'] as $svc) {
                 InvoiceService::create([
                     'company_id'  => $invoice->company_id,
@@ -287,7 +315,8 @@ $invoice = null;
             }
         });
 
-        return redirect()->route('invoices.index')->with('success', 'Invoice updated successfully.');
+        return redirect()->route('invoices.index')
+            ->with('success', 'Invoice updated successfully.');
     }
 
     /* ─────────────────────────────── DESTROY ───────────────────────────── */
@@ -335,6 +364,7 @@ $invoice = null;
         try {
             $company = $this->getCompany();
             abort_unless($invoice->company_id === $company->id, 403);
+            $terms = CompanyTerm::where('company_id', $company->id)->get();
             $invoice->load([
                 'client',
                 'services',
@@ -343,6 +373,7 @@ $invoice = null;
             ]);
             return Inertia::render('vendor/invoices/show-preview', [
                 'invoice' => $invoice,
+                'terms'   => $terms,
             ]);
         } catch (Exception $e) {
             return Inertia::render('vendor/errors/error', [
@@ -372,5 +403,14 @@ $invoice = null;
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * show pdf file
+     */
+    public function show_pdf(Invoice $invoice)
+    {
+        $pdf = Pdf::loadView('invoice.pdf', compact('invoice'));
+        return $pdf->download("invoice-{$invoice->id}.pdf");
     }
 }

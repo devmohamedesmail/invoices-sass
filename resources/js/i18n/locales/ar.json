@@ -23,11 +23,16 @@
     "inactive": "غير نشط",
     "added_successfully": "تم الإضافة بنجاح",
     "error_occurred": "حدث خطأ",
-    "saving": "جاري الحفظ..."
+    "saving": "جاري الحفظ...",
+    "confirm-deletion": "تأكيد الحذف",
+    "confirm-deletion-description": "هل أنت متأكد من حذف هذا العنصر؟",
+    "deleted_successfully": "تم الحذف بنجاح",
+    "customer-signature": "توقيع العميل",
+    "vendor-signature": "توقيع المسؤول "
   },
   "auth": {
     "register": "تسجيل",
-    "register_account":"إنشاء حساب",
+    "register_account": "إنشاء حساب",
     "name": "الاسم",
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
@@ -59,7 +64,8 @@
       "settings": "الإعدادات",
       "invoices-types": "أنواع الفواتير",
       "clients": "العملاء",
-      "new_invoice": "فاتورة جديدة"
+      "new_invoice": "فاتورة جديدة",
+      "terms-conditions": " الشروط و الاحكام "
     },
     "account": {
       "title": "إعدادات الملف الشخصي",
@@ -199,11 +205,15 @@
     "paid": "مدفوع",
     "thank_you_for_your_business": "شكراً لتعاملكم معنا",
     "terms_and_conditions": "الشروط والأحكام",
-    "preview-invoice":"معاينة الفاتورة",
-    "price":"السعر",
-    "qty":"الكمية",
+    "preview-invoice": "معاينة الفاتورة",
+    "price": "السعر",
+    "qty": "الكمية",
     "invoice_created": "تم إنشاء الفاتورة بنجاح",
     "invoice_created_error": "فشل إنشاء الفاتورة",
+    "share_whatsapp": "مشاركة عبر واتساب",
+    "invoice-updated": "تم تحديث الفاتورة بنجاح",
+    "invoice-error": "فشل تحديث الفاتورة",
+    "terms-conditions": " الشروط و الاحكام ",
     "validation": {
       "required": "هذا الحقل مطلوب",
       "min": "يجب أن تكون القيمة أكبر من أو تساوي الحد الأدنى",
@@ -307,5 +317,16 @@
   "clients": {
     "no_clients": "لا يوجد عملاء",
     "add_first_client": "أضف أول عميل لك للبدء"
+  },
+  "terms": {
+    "create": "إنشاء شروط واحكام جديدة",
+    "update": " تعديل الشروط ",
+    "band": " ادخل البند ",
+    "index": " ادخل الترتيب",
+    "no_terms_found": " لا يوجد شروط واحكام ",
+    "delete-term": "حذف الشروط",
+    "delete-term-description": "هل أنت متأكد من حذف الشروط؟",
+    "delete-term-title": "حذف الشروط",
+    "cancel":"الغاء"
   }
 }

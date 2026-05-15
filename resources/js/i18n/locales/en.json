@@ -23,7 +23,12 @@
     "inactive": "Inactive",
     "added_successfully": "Added successfully",
     "error_occurred": "Error occurred",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "confirm-deletion": "Confirm Deletion",
+    "confirm-deletion-description": "Are you sure you want to delete this item?",
+    "deleted_successfully": "Deleted successfully",
+    "customer-signature": "Customer Signature",
+    "vendor-signature": "Vendor Signature"
   },
   "auth": {
     "register": "Register",
@@ -59,7 +64,8 @@
       "settings": "Settings",
       "invoices-types": "Invoices Types",
       "clients": "Clients",
-      "new_invoice": "New Invoice"
+      "new_invoice": "New Invoice",
+      "terms-conditions":"Terms And Conditions"
     },
     "account": {
       "title": "Profile settings",
@@ -204,6 +210,10 @@
     "qty":"Quantity",
     "invoice_created": "Invoice created successfully",
     "invoice_created_error": "Failed to create invoice",
+    "share_whatsapp":"Share WhatsApp",
+    "invoice-updated":"Invoice updated successfully",
+    "invoice-error":"Failed to update invoice",
+    "terms-conditions":"Terms And Conditions",
     "validation": {
       "required": "This field is required",
       "min": "Value must be greater than or equal to minimum",
@@ -308,5 +318,15 @@
   "clients": {
     "no_clients": "No Clients Found",
     "add_first_client": "Add your first client to get started"
+  },
+  "terms":{
+    "create":"Create Terms",
+    "update":"Update Terms",
+    "band":  "Enter The Term",
+    "index" :" Enter the Band",
+    "no_terms_found":"No Terms Found",
+    "delete-term": "Delete Term",
+    "delete-term-description": "Are you sure you want to delete this term?",
+    "delete-term-title": "Delete Term"
   }
 }

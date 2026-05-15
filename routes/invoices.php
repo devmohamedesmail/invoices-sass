@@ -22,6 +22,7 @@ Route::controller(InvoiceController::class)->group(function () {
     Route::put('/invoices/{invoice}',    'update')->name('invoices.update')->middleware('auth');
     Route::get('/invoices/show/{invoice}',    'show')->name('invoices.show')->middleware('auth');
     Route::get('/invoices/show/preview/{invoice}',    'show_preview')->name('invoices.show.preview')->middleware('auth');
+    Route::get('/invoices/show/pdf/{invoice}',    'show_pdf')->name('invoices.show.pdf')->middleware('auth');
     Route::delete('/invoices/{invoice}', 'destroy')->name('invoices.destroy')->middleware('auth');
 });
 

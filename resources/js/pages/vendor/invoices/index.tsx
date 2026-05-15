@@ -65,10 +65,7 @@ export default function InvoicesIndex({ invoices, filters }: Props) {
   //   router.get('/invoices', { search }, { preserveState: true, replace: true });
   // };
 
-  const handleDelete = (id: number) => {
-    if (!confirm(t('invoices.delete_confirm'))) return;
-    router.delete(`/invoices/${id}`, { preserveScroll: true });
-  };
+ 
 
   /* ── Payment badge colour ── */
   const paymentBadge = (type: string) => {
@@ -101,76 +98,13 @@ export default function InvoicesIndex({ invoices, filters }: Props) {
 
         <InvoicesTable
           invoices={invoices}
-          handleDelete={handleDelete}
+          
           paymentBadge={paymentBadge}
           balanceClass={balanceClass} />
 
 
 
-        {/* ── Pagination ── */}
-        {invoices.last_page > 1 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-1">
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">
-              {t('common.showing', {
-                from: invoices.from,
-                to: invoices.to,
-                total: invoices.total,
-                defaultValue: `Showing ${invoices.from}–${invoices.to} of ${invoices.total}`,
-              })}
-            </p>
-
-            <div className="flex items-center gap-1">
-              {/* Prev */}
-              <button
-                disabled={invoices.current_page === 1}
-                onClick={() =>
-                  router.get('/invoices', { search, page: invoices.current_page - 1 }, {
-                    preserveState: true, replace: true,
-                  })
-                }
-                className="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
-                <ChevronLeft size={16} />
-              </button>
-
-              {/* Page numbers */}
-              {invoices.links
-                .filter((l) => !l.label.includes('Previous') && !l.label.includes('Next'))
-                .map((link, i) => (
-                  <button
-                    key={i}
-                    disabled={!link.url}
-                    onClick={() => {
-                      if (!link.url) return;
-                      const page = new URL(link.url).searchParams.get('page');
-                      router.get('/invoices', { search, page }, { preserveState: true, replace: true });
-                    }}
-                    className={`w-9 h-9 flex items-center justify-center rounded-lg border text-sm font-medium transition-colors
-                      ${link.active
-                        ? 'bg-blue-600 border-blue-600 text-white'
-                        : 'border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800'
-                      }
-                      ${!link.url ? 'opacity-40 cursor-default' : ''}
-                    `}
-                    dangerouslySetInnerHTML={{ __html: link.label }}
-                  />
-                ))}
-
-              {/* Next */}
-              <button
-                disabled={invoices.current_page === invoices.last_page}
-                onClick={() =>
-                  router.get('/invoices', { search, page: invoices.current_page + 1 }, {
-                    preserveState: true, replace: true,
-                  })
-                }
-                className="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </div>
-        )}
+      
       </div>
     </VendorLayout>
   );

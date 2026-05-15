@@ -26,3 +26,4 @@ require __DIR__.'/admin.php';
 require __DIR__.'/companies.php';
 require __DIR__.'/vendor.php';
 require __DIR__.'/invoices.php';
+require __DIR__.'/terms.php';

@@ -15,6 +15,7 @@ import CreateInvoiceHeader from '@/components/invoices/create-invoice-header';
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from 'lucide-react';
 import { t } from 'i18next';
+import { toast } from 'sonner';
 interface Props {
   invoice: any;
   clients: any[];
@@ -22,30 +23,37 @@ interface Props {
 }
 
 export default function EditInvoice({ invoice, clients, invoice_types }: Props) {
-    const { i18n } = useTranslation();
-    
-   const isRTL = i18n.dir() === 'rtl';
+  const { i18n } = useTranslation();
+
+  const isRTL = i18n.dir() === 'rtl';
   /* ───────────────── schema (same as create) ───────────────── */
   const schema = useMemo(() => {
     return z.object({
-      client_id: z.coerce.number().min(1),
+      client_name: z.string().min(1),
+      client_phone: z.string().min(1),
+
       invoice_type_id: z.coerce.number().min(1),
       invoice_number: z.string(),
       payment_type: z.string(),
       invoice_date: z.string(),
       due_date: z.string(),
 
-      car_no: z.string().optional(),
-      car_type: z.string().optional(),
-      car_model: z.string().optional(),
-      car_color: z.string().optional(),
-      car_year: z.string().optional(),
-      car_vin: z.string().optional(),
+      car_no: z.string().nullable().transform(v => v ?? '').refine(v => v.length > 0, {
+        message: t('validation.required'),
+      }),
+
+      car_type: z.string().nullable().transform(v => v ?? '').refine(v => v.length > 0, {
+        message: t('validation.required'),
+      }),
+      car_model: z.string().nullable().transform(v => v ?? ''),
+      car_color: z.string().nullable().transform(v => v ?? ''),
+      car_year: z.string().nullable().transform(v => v ?? ''),
+      car_vin: z.string().nullable().transform(v => v ?? ''),
 
       tax: z.coerce.number().min(0),
       paid_amount: z.coerce.number().min(0),
-      notes: z.string().optional(),
-      terms: z.string().optional(),
+      notes: z.string().nullable().optional(),
+      terms: z.string().nullable().optional(),
 
       services: z.array(
         z.object({
@@ -70,7 +78,8 @@ export default function EditInvoice({ invoice, clients, invoice_types }: Props) 
   } = useForm<FormData>({
     resolver: zodResolver(schema) as any,
     defaultValues: {
-      client_id: invoice.client_id,
+      client_name: invoice.client?.name || '',
+      client_phone: invoice.client?.phone || '',
       invoice_type_id: invoice.invoice_type_id,
       invoice_number: invoice.invoice_number,
       payment_type: invoice.payment_type,
@@ -108,6 +117,14 @@ export default function EditInvoice({ invoice, clients, invoice_types }: Props) 
     console.log(data)
     router.put(`/invoices/${invoice.id}`, data, {
       preserveScroll: true,
+      onSuccess: () => {
+        toast.success(t('invoices.invoice-updated'));
+        router.visit('/invoices');
+      },
+      onError: (errors) => {
+        console.log(errors)
+        toast.error(t('invoices.invoice-error'));
+      }
     });
   };
 

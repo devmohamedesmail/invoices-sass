@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     Table,
     TableBody,
@@ -8,7 +8,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useTranslation } from 'react-i18next';
-import { FileText, Trash2, Printer, Pencil, Eye ,MoreVertical} from 'lucide-react';
+import { FileText, Trash2, Printer, Pencil, Eye, MoreVertical } from 'lucide-react';
 import ReactDOM from "react-dom/client";
 import InvoicePaper from "./invoice-paper";
 
@@ -20,22 +20,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { router } from "@inertiajs/react";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { Share2 } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 
-export default function InvoicesTable({ invoices, handleDelete, paymentBadge, balanceClass }: any) {
+export default function InvoicesTable({ invoices, paymentBadge, balanceClass }: any) {
     const { t, i18n } = useTranslation();
     const isRTL = i18n.dir() === 'rtl';
+    const [deleteInvoiceModal, setDeleteInvoiceModal] = useState(false);
+    const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
 
 
 
+console.log(selectedInvoice)
 
-
-     const printInvoice = (invoice: any) => {
+    const printInvoice = (invoice: any) => {
         const printContainer = document.createElement('div');
         printContainer.className = 'printable-area';
         document.body.appendChild(printContainer);
 
         const root = ReactDOM.createRoot(printContainer);
-        root.render(<InvoicePaper invoice={invoice}  />);
+        root.render(<InvoicePaper invoice={invoice} />);
 
         const printStyles = `
           @media print {
@@ -78,7 +84,49 @@ export default function InvoicesTable({ invoices, handleDelete, paymentBadge, ba
             }, 500);
         }, 2000);
     };
+
+
+
+    const generatePDF = async (invoice: any) => {
+        const container = document.createElement("div");
+        document.body.appendChild(container);
+
+        const root = ReactDOM.createRoot(container);
+        root.render(<InvoicePaper invoice={invoice} />);
+
+        await new Promise((r) => setTimeout(r, 1000)); // انتظار render
+
+        const canvas = await html2canvas(container, { scale: 2 });
+        const imgData = canvas.toDataURL("image/png");
+
+        const pdf = new jsPDF("p", "mm", "a4");
+        const imgWidth = 210;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+
+        document.body.removeChild(container);
+
+        return pdf;
+    };
+
+
+  
+ const handleDeleteConfirmation = () => {
+    router.delete(`/invoices/${selectedInvoice?.id}`, { 
+        preserveScroll: true ,  onSuccess: () => {
+      setDeleteInvoiceModal(false);
+    },
+    onError: () => {
+      setDeleteInvoiceModal(false);
+    } });
+  };
+
+
+
+
     return (
+        <>
         <div className="overflow-x-auto">
             <Table>
                 <TableHeader className="bg-neutral-50 dark:bg-neutral-800">
@@ -121,7 +169,7 @@ export default function InvoicesTable({ invoices, handleDelete, paymentBadge, ba
                                     : '—'}
                             </TableCell>
 
-                          
+
 
                             <TableCell className="px-5 py-3.5 text-center">
                                 <span className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize text-center ${paymentBadge(invoice.payment_type)}`}>
@@ -153,16 +201,16 @@ export default function InvoicesTable({ invoices, handleDelete, paymentBadge, ba
 
                                     <DropdownMenuContent align="end" className="w-40">
 
-                                      
 
-                                         <DropdownMenuItem
+
+                                        {/* <DropdownMenuItem
                                             onClick={() => printInvoice(invoice)}
                                         >
                                             <Printer size={14} />
                                             {t('invoices.print-invoice')}
-                                        </DropdownMenuItem>
+                                        </DropdownMenuItem> */}
 
-                                         <DropdownMenuItem
+                                        <DropdownMenuItem
                                             onClick={() => router.visit(`/invoices/show/preview/${invoice.id}`)}
                                         >
                                             <Eye size={14} />
@@ -171,19 +219,29 @@ export default function InvoicesTable({ invoices, handleDelete, paymentBadge, ba
 
 
 
-                                         <DropdownMenuItem
+                                        <DropdownMenuItem
                                             onClick={() => router.visit(`/invoices/show/${invoice.id}`)}
                                         >
                                             <Eye size={14} />
                                             {t('invoices.show-invoice')}
                                         </DropdownMenuItem>
 
-                                         <DropdownMenuItem
+                                        <DropdownMenuItem
                                             onClick={() => router.visit(`/invoices/edit/${invoice.id}`)}
                                         >
                                             <Pencil size={14} />
                                             {t('invoices.edit-invoice')}
                                         </DropdownMenuItem>
+
+                                        {/* <DropdownMenuItem onClick={() => shareWhatsApp(invoice)}>
+                                            <Share2 size={14} />
+                                            {t('invoices.share_whatsapp')}
+                                        </DropdownMenuItem> */}
+
+                                         {/* <DropdownMenuItem onClick={() => shareWhatsApp2(invoice)}>
+                                            <Share2 size={14} />
+                                            {t('invoices.share_whatsapp')}
+                                        </DropdownMenuItem> */}
 
                                         {/* Separator */}
                                         <div className="h-px bg-neutral-200 dark:bg-neutral-700 my-1" />
@@ -191,7 +249,11 @@ export default function InvoicesTable({ invoices, handleDelete, paymentBadge, ba
                                         {/* Delete */}
                                         <DropdownMenuItem
                                             variant="destructive"
-                                            onClick={() => handleDelete(invoice.id)}
+                                            // onClick={() => handleDelete(invoice.id)}
+                                            onClick={() => {
+                                                setDeleteInvoiceModal(true);
+                                                setSelectedInvoice(invoice);
+                                            }}
                                         >
                                             <Trash2 size={14} />
                                             {t('common.delete')}
@@ -199,12 +261,59 @@ export default function InvoicesTable({ invoices, handleDelete, paymentBadge, ba
 
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                        
+
                             </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
         </div>
+
+
+           <div className="flex justify-end gap-2 flex-wrap mt-4">
+                {invoices.links.map((link: any, index: number) => (
+                    <button
+                        key={index}
+                        dangerouslySetInnerHTML={{ __html: link.label }}
+                        disabled={!link.url}
+                        onClick={() =>
+                            link.url &&
+                            router.visit(link.url, { preserveScroll: true })
+                        }
+                        className={`px-3 py-1 rounded text-sm ${
+                            link.active
+                                ? 'bg-primary text-white'
+                                : 'bg-white border hover:bg-gray-100'
+                        }`}
+                    />
+                ))}
+            </div>
+
+        <Dialog open={deleteInvoiceModal} onOpenChange={setDeleteInvoiceModal}>
+            <DialogContent>
+
+
+                <DialogHeader>
+                    <DialogTitle className='text-center text-red-500'>{t('common.confirm-deletion')}</DialogTitle>
+                    <DialogDescription className='text-center'>
+                        {t('common.confirm-deletion-description')}
+                    </DialogDescription>
+
+                    <DialogFooter className='mt-4'>
+                        <Button variant="default" onClick={() => setDeleteInvoiceModal(false)}>
+                            {t('common.cancel')}
+                        </Button>
+                        <Button variant="destructive" onClick={() => handleDeleteConfirmation()}>
+                            {t('common.delete')}
+                        </Button>
+                    </DialogFooter>
+
+
+                </DialogHeader>
+
+
+            </DialogContent>
+        </Dialog>
+                </>
     )
 }

@@ -4,8 +4,8 @@ import React, { useRef } from 'react'
 import { useReactToPrint } from 'react-to-print'
 import { useTranslation } from 'react-i18next'
 
-export default function ShowPreview({invoice}: {invoice: any}) {
-    const {t} = useTranslation()
+export default function ShowPreview({ invoice, terms }: { invoice: any, terms: any }) {
+  const { t } = useTranslation()
   const printRef = useRef<HTMLDivElement>(null)
 
   const handlePrint = useReactToPrint({
@@ -14,12 +14,12 @@ export default function ShowPreview({invoice}: {invoice: any}) {
   })
   return (
     <VendorLayout>
-        <button onClick={handlePrint} className='bg-primary text-white px-4 py-2 rounded-lg mb-4'>{t('invoices.print-invoice')}</button>
-        <div className='flex justify-center items-center'>
-          <div ref={printRef}>
-          <InvoicePaper invoice={invoice} />
+      <button onClick={handlePrint} className='bg-primary text-white px-4 py-2 rounded-lg mb-4'>{t('invoices.print-invoice')}</button>
+      <div className='flex justify-center items-center py-10'>
+        <div ref={printRef}>
+          <InvoicePaper invoice={invoice} terms={terms} />
         </div>
-        </div>
+      </div>
     </VendorLayout>
   )
 }

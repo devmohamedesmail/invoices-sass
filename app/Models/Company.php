@@ -48,4 +48,9 @@ class Company extends Model
     {
         return $this->hasMany(Invoice::class);
     }
+
+    public function companyTerms()
+    {
+        return $this->hasMany(CompanyTerm::class);
+    }
 }

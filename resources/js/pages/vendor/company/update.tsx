@@ -49,7 +49,7 @@ export default function UpdateCompany({ company, countries }: any) {
 
     return (
         <VendorLayout>
-<div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+<div className="max-w-9xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
 
                 <Card className="border-primary/20 shadow-lg bg-card overflow-hidden">
 

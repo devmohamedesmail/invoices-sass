@@ -27,7 +27,7 @@ export default function VendorLayout({ children, title = 'Vendor Dashboard' }: V
 
 
     return (
-        <div className="relative min-h-screen bg-background">
+        <div className="relative overflow-hidden h-screen bg-background ">
             {/* Sidebar */}
             <VendorSidebar
                 isCollapsed={isSidebarCollapsed}
@@ -38,7 +38,7 @@ export default function VendorLayout({ children, title = 'Vendor Dashboard' }: V
             {/* Main Content */}
             <div
                 className={cn(
-                    'transition-all duration-300 ease-in-out',
+                    'transition-all duration-300 ease-in-out ',
                     // isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'
                     isSidebarCollapsed
                         ? 'ltr:lg:pl-20 rtl:lg:pr-20'
@@ -53,7 +53,7 @@ export default function VendorLayout({ children, title = 'Vendor Dashboard' }: V
                 />
 
                 {/* Page Content */}
-                <main className="p-4 lg:p-6">
+                <main className="p-4 lg:p-6 overflow-auto h-screen">
                     {children}
                 </main>
             </div>
